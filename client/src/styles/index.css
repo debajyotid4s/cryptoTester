@@ -1,0 +1,276 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --iron: #e05252;
+  --emerald: #2dd4a0;
+  --frost: #5b9bd5;
+  --gold: #f5a623;
+
+  --bg-base: #0d1117;
+  --bg-surface: #131a26;
+  --border-color: #1e2d40;
+  --text-primary: #e8dcc8;
+  --text-muted: #6b7a8d;
+  --grid-lines: rgba(255, 255, 255, 0.06);
+  --frame-border: #2a3a52;
+  --compass-tint: #c9a96e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Courier Prime", monospace;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  overflow-x: auto;
+}
+
+::selection {
+  background: rgba(224, 82, 82, 0.4);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--iron);
+}
+
+.font-cinzel {
+  font-family: "Cinzel", serif;
+}
+
+.font-mono {
+  font-family: "Courier Prime", monospace;
+}
+
+.glass-panel {
+  background: rgba(19, 26, 38, 0.8);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+}
+
+.parchment-bg {
+  background:
+    linear-gradient(135deg, rgba(30, 45, 32, 0.1) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(30, 45, 32, 0.1) 0%, transparent 50%),
+    var(--bg-surface);
+}
+
+@keyframes sonar {
+  0% {
+    r: 5;
+    opacity: 0.7;
+  }
+  100% {
+    r: 22;
+    opacity: 0;
+  }
+}
+
+@keyframes dashMarch {
+  to {
+    stroke-dashoffset: -30;
+  }
+}
+
+.marching {
+  stroke-dasharray: 10 5;
+  animation: dashMarch 2s linear infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.05;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.twinkle-slow {
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+.twinkle-med {
+  animation: twinkle 4.5s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.twinkle-fast {
+  animation: twinkle 3s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+@keyframes animate-ancient-routes {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-ancient-routes {
+  animation: animate-ancient-routes 20s linear infinite;
+}
+
+@keyframes sonar-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes route-flow {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-sonar {
+  animation: sonar-pulse 2s ease-out infinite;
+}
+
+.animate-route {
+  animation: route-flow 1s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.glow-iron {
+  box-shadow: 0 0 30px rgba(224, 82, 82, 0.4);
+}
+.glow-emerald {
+  box-shadow: 0 0 30px rgba(45, 212, 160, 0.4);
+}
+.glow-frost {
+  box-shadow: 0 0 30px rgba(91, 155, 213, 0.4);
+}
+.glow-gold {
+  box-shadow: 0 0 30px rgba(245, 166, 35, 0.4);
+}
+
+.wax-seal {
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid currentColor;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px currentColor;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.map-grid line {
+  stroke: var(--grid-lines);
+  stroke-width: 0.5;
+}
+
+.emboss {
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.5),
+    -1px -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.kingdom-border-iron {
+  border-top: 3px solid var(--iron);
+}
+.kingdom-border-emerald {
+  border-top: 3px solid var(--emerald);
+}
+.kingdom-border-frost {
+  border-top: 3px solid var(--frost);
+}
+.kingdom-border-gold {
+  border-top: 3px solid var(--gold);
+}
+
+.kingdom-text-iron {
+  color: var(--iron);
+}
+.kingdom-text-emerald {
+  color: var(--emerald);
+}
+.kingdom-text-frost {
+  color: var(--frost);
+}
+.kingdom-text-gold {
+  color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .map-desktop-only {
+    display: none;
+  }
+  .mobile-cards-only {
+    display: flex !important;
+  }
+}
+
+/* Hide browser number input spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

@@ -1,6 +1,6 @@
-const express = require('express');
-const { encrypt, decrypt } = require('../algos/playfair');
-const { requireString } = require('../utils/validate');
+const express = require("express");
+const { encrypt, decrypt } = require("../algos/playfair");
+const { requireString } = require("../utils/validate");
 
 const router = express.Router();
 
@@ -8,55 +8,55 @@ function errorResponse(res, err) {
   res.status(400).json({
     error: err.message,
     details: {
-      code: 'PLAYFAIR_CIPHER_ERROR',
-      timestamp: new Date().toISOString()
-    }
+      code: "PLAYFAIR_CIPHER_ERROR",
+      timestamp: new Date().toISOString(),
+    },
   });
 }
 
 function requireKey(x, fieldName) {
-  if (x === undefined || x === null || x === '') {
-    return 'CIPHER';
+  if (x === undefined || x === null || x === "") {
+    return "CIPHER";
   }
-  if (typeof x !== 'string') {
+  if (typeof x !== "string") {
     throw new Error(`${fieldName} must be a string`);
   }
-  const sanitized = x.toUpperCase().replace(/[^A-Z]/g, '');
+  const sanitized = x.toUpperCase().replace(/[^A-Z]/g, "");
   if (sanitized.length === 0) {
     throw new Error(`${fieldName} must contain at least one letter`);
   }
   return sanitized;
 }
 
-router.post('/encrypt', (req, res) => {
+router.post("/encrypt", (req, res) => {
   try {
-    const text = requireString(req.body.text, 'text');
-    const key = requireKey(req.body.params?.key, 'key');
+    const text = requireString(req.body.text, "text");
+    const key = requireKey(req.body.params?.key, "key");
 
     const result = encrypt(text, { key });
 
-    res.json({
+    return res.json({
       result: result.result,
-      explain: result.explain
+      explain: result.explain,
     });
   } catch (err) {
-    errorResponse(res, err);
+    return errorResponse(res, err);
   }
 });
 
-router.post('/decrypt', (req, res) => {
+router.post("/decrypt", (req, res) => {
   try {
-    const text = requireString(req.body.text, 'text');
-    const key = requireKey(req.body.params?.key, 'key');
+    const text = requireString(req.body.text, "text");
+    const key = requireKey(req.body.params?.key, "key");
 
     const result = decrypt(text, { key });
 
-    res.json({
+    return res.json({
       result: result.result,
-      explain: result.explain
+      explain: result.explain,
     });
   } catch (err) {
-    errorResponse(res, err);
+    return errorResponse(res, err);
   }
 });
 

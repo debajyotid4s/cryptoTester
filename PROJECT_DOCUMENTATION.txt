@@ -1,0 +1,201 @@
+================================================================================
+CRYPTOALGO TESTER - PROJECT DOCUMENTATION
+================================================================================
+
+PROJECT OVERVIEW
+----------------
+CryptoAlgo Tester (now "Cryptographic Realm") is a web-based cryptography 
+playground designed to help users understand and experiment with classical 
+encryption algorithms. It features a React/Vite frontend with Tailwind CSS 
+and a Node.js/Express backend.
+
+================================================================================
+CURRENT STACK
+================================================================================
+
+FRONTEND (client/)
+-----------------
+- React 18 + Vite
+- Tailwind CSS v3
+- Framer Motion for animations
+- React Router v6
+- Lucide React icons
+
+Project Structure:
+client/
+├── src/
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Layout.jsx
+│   │   │   └── Navbar.jsx
+│   │   ├── map/
+│   │   │   └── FantasyMap.jsx      # Interactive kingdom map
+│   │   ├── ui/
+│   │   │   └── (various UI components)
+│   │   └── cipher/
+│   │       └── KeyFactorCard.jsx
+│   ├── pages/
+│   │   ├── Home.jsx                # Realm Map page
+│   │   └── CipherRoom.jsx          # Cipher lab page
+│   ├── services/
+│   │   └── cryptoService.js        # API client
+│   ├── styles/
+│   │   └── index.css               # Tailwind + custom styles
+│   └── App.jsx
+├── index.html
+├── tailwind.config.js
+├── vite.config.js
+└── package.json
+
+BACKEND (server/)
+-----------------
+- Node.js + Express.js
+- RESTful API architecture
+- 4 classical cipher implementations
+
+Project Structure:
+server/
+├── src/
+│   ├── app.js
+│   ├── routes/
+│   │   ├── health.js
+│   │   ├── hill.js
+│   │   ├── caesar.js
+│   │   ├── playfair.js
+│   │   └── vigenere.js
+│   ├── algos/
+│   │   ├── hill2x2.js
+│   │   ├── caesar.js
+│   │   ├── playfair.js
+│   │   └── vigenere.js
+│   └── utils/
+│       ├── math.js
+│       ├── text.js
+│       └── validate.js
+└── package.json
+
+================================================================================
+FRONTEND FEATURES
+================================================================================
+
+1. REALM MAP (Home.jsx)
+   - Interactive SVG map with 4 cipher kingdoms
+   - Organic, irregular territory shapes using bezier curves
+   - Hover tooltips with kingdom details
+   - Thematic icons: crossed swords, scroll, snowflake, crown
+   - Animated connector routes between kingdoms
+   - Compass rose decoration
+   - Decorative frame with corner ornaments
+   - Radial gradient background
+
+   Kingdom Territories:
+   - Iron Dominion (Caesar Cipher) - Red (#e05252)
+   - Emerald Archives (Vigenère Cipher) - Teal (#2dd4a0)
+   - Frost Citadel (Playfair Cipher) - Blue (#5b9bd5)
+   - Golden Kingdom (Hill Cipher) - Gold (#f5a623)
+
+2. CIPHER CHAMBERS (CipherRoom.jsx)
+   - Interactive cipher encryption/decryption interface
+   - Key input fields for each cipher type
+   - Sample text buttons for quick testing
+   - Step-by-step key factors explanation panel
+   - Encrypt/Decrypt/Swap/Copy functionality
+
+3. NAVBAR
+   - Dark glassy background with backdrop blur
+   - Logo with glowing ring effect
+   - Navigation links: Realm Map, Cipher Chambers
+
+4. UI COMPONENTS
+   - GlassPanel - Glassmorphism card component
+   - AnimatedButton - Interactive button component
+   - Toast - Notification system
+   - LoadingScreen - Loading spinner
+
+================================================================================
+BACKEND API ENDPOINTS
+================================================================================
+
+All endpoints follow: POST /api/{algorithm}/{operation}
+
+Health Check:
+- GET /api/health
+
+Caesar Cipher:
+- POST /api/caesar/encrypt
+- POST /api/caesar/decrypt
+
+Hill Cipher:
+- POST /api/hill/encrypt
+- POST /api/hill/decrypt
+
+Playfair Cipher:
+- POST /api/playfair/encrypt
+- POST /api/playfair/decrypt
+
+Vigenère Cipher:
+- POST /api/vigenere/encrypt
+- POST /api/vigenere/decrypt
+
+Request Format:
+{
+  "text": "HELLO",
+  "params": {
+    "shift": 3,
+    "key": "KEY",
+    "matrix": [[3,3],[2,5]],
+    "padChar": "X"
+  }
+}
+
+Response Format:
+{
+  "result": "KHOOR",
+  "explain": {
+    "summary": ["..."],
+    "facts": {"m": 26, "shift": 3},
+    "rows": [{"char": "H", "inputNum": 7, "shift": 3, "outputNum": 10, "outputChar": "K"}],
+    "notes": []
+  }
+}
+
+================================================================================
+TECHNICAL NOTES
+================================================================================
+
+- All ciphers use A=0 to Z=25 (not A=1) for consistency
+- Modular arithmetic uses custom mod() to handle negatives
+- GCD(det, 26) must equal 1 for Hill cipher key validity
+- Text sanitization removes all non-A-Z characters
+- All algorithms are case-insensitive (convert to uppercase)
+- Map viewBox: 1400x780 for proper kingdom display
+
+================================================================================
+RUNNING THE PROJECT
+================================================================================
+
+Frontend (Development):
+   cd client
+   npm run dev      # Runs on http://localhost:5173
+
+Frontend (Production):
+   cd client
+   npm run build   # Builds to dist/
+   npm run preview # Preview production build
+
+Backend (Development):
+   cd server
+   npm run dev    # Runs on http://localhost:8080 with auto-reload
+
+Backend (Production):
+   cd server
+   npm start      # Runs on http://localhost:8080
+
+Both:
+   # Start backend in one terminal
+   cd server && npm run dev
+   
+   # Start frontend in another terminal
+   cd client && npm run dev
+
+================================================================================
