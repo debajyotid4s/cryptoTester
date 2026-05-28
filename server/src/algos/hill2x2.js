@@ -72,25 +72,17 @@ function encryptBlock(matrix, nums, m) {
   ];
 }
 
-function decryptBlock(matrix, nums, m) {
-  return encryptBlock(matrix, nums, m);
-}
-
-function encrypt(text, matrix, options = {}) {
-  const padChar = options.padChar || 'X';
-  const m = options.m || 26;
-
-  const sanitized = sanitizeAZ(text);
+function encryptWord(word, matrix, padChar, m) {
+  const sanitized = sanitizeAZ(word);
   const { text: paddedText, padCount } = padText(sanitized, padChar, 2);
   const blocks = textToBlocks(paddedText);
 
-  const keyMatrix = matrix;
   const rows = [];
   let resultText = '';
 
   for (const block of blocks) {
     const inputNums = blockToNums(block);
-    const outputNums = encryptBlock(keyMatrix, inputNums, m);
+    const outputNums = encryptBlock(matrix, inputNums, m);
     const outputBlock = numsToBlock(outputNums);
 
     rows.push({
@@ -103,28 +95,77 @@ function encrypt(text, matrix, options = {}) {
     resultText += outputBlock;
   }
 
-  const d = det2x2(keyMatrix);
+  return { result: resultText, rows, padCount };
+}
+
+function decryptWord(word, invMatrix, m) {
+  const sanitized = sanitizeAZ(word);
+  const blocks = textToBlocks(sanitized);
+
+  const rows = [];
+  let resultText = '';
+
+  for (const block of blocks) {
+    const inputNums = blockToNums(block);
+    const outputNums = encryptBlock(invMatrix, inputNums, m);
+    const outputBlock = numsToBlock(outputNums);
+
+    rows.push({
+      block,
+      inputNums,
+      outputNums,
+      outputBlock
+    });
+
+    resultText += outputBlock;
+  }
+
+  return { result: resultText, rows };
+}
+
+function encrypt(text, matrix, options = {}) {
+  const padChar = options.padChar || 'X';
+  const m = options.m || 26;
+  const parts = text.split(/(\s+)/);
+
+  let resultText = '';
+  let allRows = [];
+  let padAddedPerWord = [];
+
+  for (const part of parts) {
+    if (/^\s+$/.test(part)) {
+      resultText += part;
+    } else if (part.length > 0) {
+      const wordResult = encryptWord(part, matrix, padChar, m);
+      resultText += wordResult.result;
+      allRows = allRows.concat(wordResult.rows);
+      padAddedPerWord.push(wordResult.padCount);
+    }
+  }
+
+  const totalPadAdded = padAddedPerWord.reduce((s, v) => s + v, 0);
+  const d = det2x2(matrix);
   const dMod = mod(d, m);
   const g = gcd(d, m);
   const dInv = g === 1 ? invMod(d, m) : null;
 
   const explain = {
     summary: [
-      `Sanitized input: "${sanitized}"`,
-      padCount > 0 ? `Padded with ${padCount} "${padChar}"` : 'No padding needed'
+      `Sanitized input: "${sanitizeAZ(text)}"`,
+      totalPadAdded > 0 ? `Padded with ${totalPadAdded} "${padChar}" total across words` : 'No padding needed'
     ],
     facts: {
       m,
-      keyMatrix: JSON.stringify(keyMatrix),
+      keyMatrix: JSON.stringify(matrix),
       det: d,
       detMod26: dMod,
       gcdDet26: g,
       detInvMod26: dInv
     },
-    tables: [],
-    rows,
+    rows: allRows,
     notes: g !== 1 ? ['Warning: Matrix is not invertible - cannot decrypt!'] : [],
-    padAdded: padCount
+    padAdded: totalPadAdded,
+    padAddedPerWord
   };
 
   return { result: resultText, explain };
@@ -134,63 +175,63 @@ function decrypt(text, matrix, options = {}) {
   const m = options.m || 26;
   const padChar = options.padChar || 'X';
   const stripPadding = options.stripPadding !== undefined ? options.stripPadding : true;
-  const padAdded = options.padAdded || 0;
+  const padAddedPerWord = options.padAddedPerWord;
 
-  const sanitized = sanitizeAZ(text);
+  const invMatrix = invMat2x2Mod(matrix, m);
+  const parts = text.split(/(\s+)/);
 
-  const keyMatrix = matrix;
-  const invMatrix = invMat2x2Mod(keyMatrix, m);
-
-  const blocks = textToBlocks(sanitized);
-
-  const rows = [];
   let resultText = '';
-
-  for (const block of blocks) {
-    const inputNums = blockToNums(block);
-    const outputNums = decryptBlock(invMatrix, inputNums, m);
-    const outputBlock = numsToBlock(outputNums);
-
-    rows.push({
-      block,
-      inputNums,
-      outputNums,
-      outputBlock
-    });
-
-    resultText += outputBlock;
-  }
-
+  let allRows = [];
   let padRemoved = 0;
-  if (stripPadding && padAdded > 0) {
-    const lastChar = resultText.slice(-1);
-    if (lastChar === padChar) {
-      resultText = resultText.slice(0, -1);
-      padRemoved = 1;
+  let wordIndex = 0;
+
+  for (const part of parts) {
+    if (/^\s+$/.test(part)) {
+      resultText += part;
+    } else if (part.length > 0) {
+      const wordResult = decryptWord(part, invMatrix, m);
+      let wordText = wordResult.result;
+
+      const shouldStrip = stripPadding && (
+        padAddedPerWord
+          ? padAddedPerWord[wordIndex] > 0
+          : false
+      );
+
+      if (shouldStrip) {
+        const lastChar = wordText.slice(-1);
+        if (lastChar === padChar) {
+          wordText = wordText.slice(0, -1);
+          padRemoved++;
+        }
+      }
+
+      resultText += wordText;
+      allRows = allRows.concat(wordResult.rows);
+      wordIndex++;
     }
   }
 
-  const d = det2x2(keyMatrix);
+  const d = det2x2(matrix);
   const dMod = mod(d, m);
   const g = gcd(d, m);
   const dInv = invMod(d, m);
 
   const explain = {
     summary: [
-      `Sanitized input: "${sanitized}"`,
-      padRemoved > 0 ? `Removed ${padRemoved} padding character` : 'No padding to remove'
+      `Sanitized input: "${sanitizeAZ(text)}"`,
+      padRemoved > 0 ? `Removed ${padRemoved} padding character(s)` : 'No padding to remove'
     ],
     facts: {
       m,
-      keyMatrix: JSON.stringify(keyMatrix),
+      keyMatrix: JSON.stringify(matrix),
       inverseMatrix: JSON.stringify(invMatrix),
       det: d,
       detMod26: dMod,
       gcdDet26: g,
       detInvMod26: dInv
     },
-    tables: [],
-    rows,
+    rows: allRows,
     notes: [],
     padRemoved,
     strippedPadding: stripPadding

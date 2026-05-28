@@ -1,113 +1,95 @@
-const { mod } = require('../utils/math');
-const { sanitizeAZ, charToNumAZ, numToCharAZ } = require('../utils/text');
-
-function generateKeyStream(text, key) {
-  const sanitizedKey = key.toUpperCase().replace(/[^A-Z]/g, '');
-  let keyStream = '';
-  let keyIndex = 0;
-
-  for (const char of text) {
-    if (char >= 'A' && char <= 'Z') {
-      keyStream += sanitizedKey[keyIndex % sanitizedKey.length];
-      keyIndex++;
-    }
-  }
-
-  return keyStream;
-}
+const { mod } = require("../utils/math");
+const { sanitizeAZ, charToNumAZ, numToCharAZ } = require("../utils/text");
 
 function encrypt(text, options = {}) {
-  const key = options.key || 'KEY';
+  const key = options.key || "KEY";
+  const sanitizedKey = key.toUpperCase().replace(/[^A-Z]/g, "");
   const sanitized = sanitizeAZ(text);
-  const keyStream = generateKeyStream(sanitized, key);
 
   const rows = [];
-  let resultText = '';
+  let resultText = "";
+  let keyIndex = 0;
+  let builtKeyStream = "";
 
-  for (let i = 0; i < sanitized.length; i++) {
-    const char = sanitized[i];
-    const keyChar = keyStream[i];
-    const inputNum = charToNumAZ(char);
-    const keyNum = charToNumAZ(keyChar);
-    const shift = keyNum;
-    const outputNum = mod(inputNum + shift, 26);
-    const outputChar = numToCharAZ(outputNum);
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
 
-    rows.push({
-      char,
-      keyChar,
-      inputNum,
-      keyNum,
-      outputNum,
-      outputChar
-    });
+    if (char >= "A" && char <= "Z") {
+      const keyChar = sanitizedKey[keyIndex % sanitizedKey.length];
+      builtKeyStream += keyChar;
+      const inputNum = charToNumAZ(char);
+      const keyNum = charToNumAZ(keyChar);
+      const outputNum = mod(inputNum + keyNum, 26);
+      const outputChar = numToCharAZ(outputNum);
 
-    resultText += outputChar;
+      rows.push({ char, keyChar, inputNum, keyNum, outputNum, outputChar });
+      resultText += outputChar;
+      keyIndex++;
+    } else if (/\s/.test(char)) {
+      resultText += char;
+    }
   }
 
   const explain = {
     summary: [
       `Sanitized input: "${sanitized}"`,
       `Key: "${key}"`,
-      `Key stream: "${keyStream}"`
+      `Key stream: "${builtKeyStream}"`,
     ],
     facts: {
       key,
-      keyStream,
-      length: sanitized.length
+      keyStream: builtKeyStream,
+      length: sanitized.length,
     },
-    tables: [],
     rows,
-    notes: []
+    notes: [],
   };
 
   return { result: resultText, explain };
 }
 
 function decrypt(text, options = {}) {
-  const key = options.key || 'KEY';
+  const key = options.key || "KEY";
+  const sanitizedKey = key.toUpperCase().replace(/[^A-Z]/g, "");
   const sanitized = sanitizeAZ(text);
-  const keyStream = generateKeyStream(sanitized, key);
 
   const rows = [];
-  let resultText = '';
+  let resultText = "";
+  let keyIndex = 0;
+  let builtKeyStream = "";
 
-  for (let i = 0; i < sanitized.length; i++) {
-    const char = sanitized[i];
-    const keyChar = keyStream[i];
-    const inputNum = charToNumAZ(char);
-    const keyNum = charToNumAZ(keyChar);
-    const shift = keyNum;
-    const outputNum = mod(inputNum - shift, 26);
-    const outputChar = numToCharAZ(outputNum);
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
 
-    rows.push({
-      char,
-      keyChar,
-      inputNum,
-      keyNum,
-      shift,
-      outputNum,
-      outputChar
-    });
+    if (char >= "A" && char <= "Z") {
+      const keyChar = sanitizedKey[keyIndex % sanitizedKey.length];
+      builtKeyStream += keyChar;
+      const inputNum = charToNumAZ(char);
+      const keyNum = charToNumAZ(keyChar);
+      const outputNum = mod(inputNum - keyNum, 26);
+      const outputChar = numToCharAZ(outputNum);
 
-    resultText += outputChar;
+      rows.push({ char, keyChar, inputNum, keyNum, outputNum, outputChar });
+      resultText += outputChar;
+      keyIndex++;
+    } else if (/\s/.test(char)) {
+      resultText += char;
+    }
   }
 
   const explain = {
     summary: [
       `Sanitized input: "${sanitized}"`,
       `Key: "${key}"`,
-      `Key stream: "${keyStream}"`
+      `Key stream: "${builtKeyStream}"`,
     ],
     facts: {
       key,
-      keyStream,
-      length: sanitized.length
+      keyStream: builtKeyStream,
+      length: sanitized.length,
     },
-    tables: [],
     rows,
-    notes: []
+    notes: [],
   };
 
   return { result: resultText, explain };

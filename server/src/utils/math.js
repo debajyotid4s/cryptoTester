@@ -1,5 +1,3 @@
-const path = require('path');
-
 function mod(n, m) {
   return ((n % m) + m) % m;
 }

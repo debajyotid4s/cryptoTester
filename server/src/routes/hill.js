@@ -9,7 +9,7 @@ const {
 const router = express.Router();
 
 function errorResponse(res, err) {
-  const status = err.message?.includes("not invertible") ? 400 : 400;
+  const status = 400;
   res.status(status).json({
     error: err.message,
     details: {
@@ -46,12 +46,14 @@ router.post("/decrypt", (req, res) => {
         ? req.body.params.stripPadding
         : false;
     const padAdded = req.body.params?.padAdded || 0;
+    const padAddedPerWord = req.body.params?.padAddedPerWord;
 
     const result = decrypt(text, matrix, {
       padChar,
       m: 26,
       stripPadding,
       padAdded,
+      padAddedPerWord,
     });
 
     return res.json({

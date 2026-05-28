@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin, Copy, RefreshCw, Shuffle, AlertCircle } from "lucide-react";
+import { MapPin, Copy, Shuffle, AlertCircle } from "lucide-react";
 import { CIPHER_ALGORITHMS, encrypt, decrypt } from "../services/cryptoService";
 import Toast from "../components/ui/Toast";
 import KeyFactorCard from "../components/cipher/KeyFactorCard";
@@ -126,6 +126,9 @@ export default function CipherRoom() {
       const decryptParams = { ...params };
       if (params.stripPadding && lastResult?.explain?.padAdded) {
         decryptParams.padAdded = lastResult.explain.padAdded;
+      }
+      if (params.stripPadding && lastResult?.explain?.padAddedPerWord) {
+        decryptParams.padAddedPerWord = lastResult.explain.padAddedPerWord;
       }
       const data = await decrypt(algo, inputText.toUpperCase(), decryptParams);
       const endTime = performance.now();
@@ -272,7 +275,7 @@ export default function CipherRoom() {
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value.toUpperCase())}
-              placeholder="Enter text (A-Z only)"
+              placeholder="Enter text (A-Z and spaces)"
               className="w-full h-56 bg-realm-bg border-2 rounded-xl p-5 text-lg text-realm-text font-cinzel resize-none transition-all duration-300 focus:outline-none hover:shadow-lg"
               style={{
                 borderColor: theme.color,
@@ -295,17 +298,6 @@ export default function CipherRoom() {
                   {text}
                 </button>
               ))}
-              <button
-                onClick={() => setInputText("HELLO")}
-                className="px-4 py-2 text-sm rounded border font-mono transition-colors"
-                style={{
-                  borderColor: `${theme.color}40`,
-                  color: theme.light,
-                  backgroundColor: `${theme.color}10`,
-                }}
-              >
-                Sample
-              </button>
             </div>
 
             <ParameterFields

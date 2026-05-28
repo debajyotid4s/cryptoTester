@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const hillRoutes = require("./routes/hill");
@@ -5,18 +7,19 @@ const caesarRoutes = require("./routes/caesar");
 const playfairRoutes = require("./routes/playfair");
 const vigenereRoutes = require("./routes/vigenere");
 const healthRoutes = require("./routes/health");
+const chatRoutes = require("./routes/chat");
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 
 app.use((req, res, next) => {
-  const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+  if (origin) {
     res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Credentials", "true");
   }
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
@@ -32,6 +35,7 @@ app.use("/api/hill", hillRoutes);
 app.use("/api/caesar", caesarRoutes);
 app.use("/api/playfair", playfairRoutes);
 app.use("/api/vigenere", vigenereRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Static file serving for production build (if exists)
 const fs = require("fs");

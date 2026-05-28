@@ -1,9 +1,9 @@
-const { sanitizeAZ, charToNumAZ, numToCharAZ } = require('../utils/text');
+const { sanitizeAZ } = require("../utils/text");
 
 function buildKeyMatrix(key) {
-  const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
-  const keyUpper = key.toUpperCase().replace(/J/g, 'I');
-  let uniqueChars = '';
+  const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+  const keyUpper = key.toUpperCase().replace(/J/g, "I");
+  let uniqueChars = "";
   const seen = new Set();
 
   for (const char of keyUpper) {
@@ -21,7 +21,7 @@ function buildKeyMatrix(key) {
 
   const matrix = [];
   for (let i = 0; i < 5; i++) {
-    matrix.push(uniqueChars.slice(i * 5, i * 5 + 5).split(''));
+    matrix.push(uniqueChars.slice(i * 5, i * 5 + 5).split(""));
   }
 
   return matrix;
@@ -39,7 +39,10 @@ function findPosition(matrix, char) {
 }
 
 function prepareText(text) {
-  const sanitized = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+  const sanitized = text
+    .toUpperCase()
+    .replace(/J/g, "I")
+    .replace(/[^A-Z]/g, "");
   const pairs = [];
   let i = 0;
 
@@ -52,13 +55,13 @@ function prepareText(text) {
     }
 
     if (a === b) {
-      pairs.push([a, 'X']);
+      pairs.push([a, "X"]);
       i += 1;
     } else if (b !== null) {
       pairs.push([a, b]);
       i += 2;
     } else {
-      pairs.push([a, 'X']);
+      pairs.push([a, "X"]);
       i += 1;
     }
   }
@@ -90,43 +93,33 @@ function encryptPair(matrix, a, b, operation) {
   return [matrix[rowA][colA], matrix[rowB][colB]];
 }
 
-function encrypt(text, options = {}) {
-  const key = options.key || 'CIPHER';
-  const matrix = buildKeyMatrix(key);
-  const pairs = prepareText(text);
-
+function encryptWord(word, matrix) {
+  const pairs = prepareText(word);
   const rows = [];
-  let resultText = '';
+  let resultText = "";
 
   for (const [a, b] of pairs) {
+    const posA = findPosition(matrix, a);
+    const posB = findPosition(matrix, b);
     const [encA, encB] = encryptPair(matrix, a, b, 1);
-    rows.push({ pair: a + b, result: encA + encB });
+    rows.push({
+      pair: a + b,
+      input: a + b,
+      output: encA + encB,
+      result: encA + encB,
+      inputPositions: [posA, posB],
+    });
     resultText += encA + encB;
   }
 
-  const explain = {
-    summary: [
-      `Sanitized input: "${text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '')}"`,
-      `Key: "${key}"`,
-      `Pairs processed: ${pairs.length}`
-    ],
-    facts: {
-      key,
-      matrix: JSON.stringify(matrix),
-      pairCount: pairs.length
-    },
-    tables: [],
-    rows,
-    notes: []
-  };
-
-  return { result: resultText, explain };
+  return { result: resultText, rows };
 }
 
-function decrypt(text, options = {}) {
-  const key = options.key || 'CIPHER';
-  const matrix = buildKeyMatrix(key);
-  const sanitized = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+function decryptWord(word, matrix) {
+  const sanitized = word
+    .toUpperCase()
+    .replace(/J/g, "I")
+    .replace(/[^A-Z]/g, "");
 
   const pairs = [];
   for (let i = 0; i < sanitized.length; i += 2) {
@@ -136,43 +129,118 @@ function decrypt(text, options = {}) {
   }
 
   const rows = [];
-  let resultText = '';
+  let resultText = "";
 
   for (const [a, b] of pairs) {
+    const posA = findPosition(matrix, a);
+    const posB = findPosition(matrix, b);
     const [decA, decB] = encryptPair(matrix, a, b, -1);
-    rows.push({ pair: a + b, result: decA + decB });
+    rows.push({
+      pair: a + b,
+      input: a + b,
+      output: decA + decB,
+      result: decA + decB,
+      inputPositions: [posA, posB],
+    });
     resultText += decA + decB;
   }
 
-  let cleaned = '';
-  for (let i = 0; i < resultText.length; i++) {
-    if (resultText[i] === 'X' && i > 0 && i < resultText.length - 1) {
-      if (resultText[i - 1] === resultText[i + 1]) {
+  return { result: resultText, rows };
+}
+
+function stripPlayfairPadding(text) {
+  let cleaned = "";
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === "X" && i > 0 && i < text.length - 1) {
+      if (text[i - 1] === text[i + 1]) {
         continue;
       }
     }
-    cleaned += resultText[i];
+    cleaned += text[i];
+  }
+  cleaned = cleaned.replace(/X$/, "");
+  return cleaned;
+}
+
+function encrypt(text, options = {}) {
+  const key = options.key || "CIPHER";
+  const matrix = buildKeyMatrix(key);
+  const parts = text.split(/(\s+)/);
+
+  let resultText = "";
+  let allRows = [];
+  let totalPairs = 0;
+
+  for (const part of parts) {
+    if (/^\s+$/.test(part)) {
+      resultText += part;
+    } else if (part.length > 0) {
+      const wordResult = encryptWord(part, matrix);
+      resultText += wordResult.result;
+      allRows = allRows.concat(wordResult.rows);
+      totalPairs += wordResult.rows.length;
+    }
   }
 
-  cleaned = cleaned.replace(/X$/, '');
+  const sanitized = sanitizeAZ(text);
 
   const explain = {
     summary: [
       `Sanitized input: "${sanitized}"`,
       `Key: "${key}"`,
-      `Pairs processed: ${pairs.length}`
+      `Pairs processed: ${totalPairs}`,
     ],
     facts: {
       key,
       matrix: JSON.stringify(matrix),
-      pairCount: pairs.length
+      pairCount: totalPairs,
     },
-    tables: [],
-    rows,
-    notes: []
+    rows: allRows,
+    notes: [],
   };
 
-  return { result: cleaned, explain };
+  return { result: resultText, explain };
+}
+
+function decrypt(text, options = {}) {
+  const key = options.key || "CIPHER";
+  const matrix = buildKeyMatrix(key);
+  const parts = text.split(/(\s+)/);
+
+  let resultText = "";
+  let allRows = [];
+  let totalPairs = 0;
+
+  for (const part of parts) {
+    if (/^\s+$/.test(part)) {
+      resultText += part;
+    } else if (part.length > 0) {
+      const wordResult = decryptWord(part, matrix);
+      const cleaned = stripPlayfairPadding(wordResult.result);
+      resultText += cleaned;
+      allRows = allRows.concat(wordResult.rows);
+      totalPairs += wordResult.rows.length;
+    }
+  }
+
+  const sanitized = sanitizeAZ(text);
+
+  const explain = {
+    summary: [
+      `Sanitized input: "${sanitized}"`,
+      `Key: "${key}"`,
+      `Pairs processed: ${totalPairs}`,
+    ],
+    facts: {
+      key,
+      matrix: JSON.stringify(matrix),
+      pairCount: totalPairs,
+    },
+    rows: allRows,
+    notes: [],
+  };
+
+  return { result: resultText, explain };
 }
 
 module.exports = { encrypt, decrypt };

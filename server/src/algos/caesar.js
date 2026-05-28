@@ -1,42 +1,40 @@
 const { mod } = require('../utils/math');
 const { sanitizeAZ, charToNumAZ, numToCharAZ } = require('../utils/text');
 
-function encrypt(text, options = {}) {
-  const shift = options.shift || 3;
-  const m = options.m || 26;
-
-  const sanitized = sanitizeAZ(text);
-
+function processText(text, shift, direction) {
+  const m = 26;
   const rows = [];
   let resultText = '';
 
-  for (let i = 0; i < sanitized.length; i++) {
-    const char = sanitized[i];
-    const inputNum = charToNumAZ(char);
-    const outputNum = mod(inputNum + shift, m);
-    const outputChar = numToCharAZ(outputNum);
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
 
-    rows.push({
-      char,
-      inputNum,
-      shift,
-      outputNum,
-      outputChar
-    });
+    if (char >= 'A' && char <= 'Z') {
+      const inputNum = charToNumAZ(char);
+      const outputNum = mod(inputNum + direction * shift, m);
+      const outputChar = numToCharAZ(outputNum);
 
-    resultText += outputChar;
+      rows.push({ char, inputNum, shift, outputNum, outputChar });
+      resultText += outputChar;
+    } else if (/\s/.test(char)) {
+      resultText += char;
+    }
   }
+
+  return { resultText, rows };
+}
+
+function encrypt(text, options = {}) {
+  const shift = options.shift || 3;
+  const { resultText, rows } = processText(text, shift, 1);
+  const sanitized = sanitizeAZ(text);
 
   const explain = {
     summary: [
       `Sanitized input: "${sanitized}"`,
       `Shift: ${shift}`
     ],
-    facts: {
-      m,
-      shift
-    },
-    tables: [],
+    facts: { m: 26, shift },
     rows,
     notes: []
   };
@@ -46,40 +44,15 @@ function encrypt(text, options = {}) {
 
 function decrypt(text, options = {}) {
   const shift = options.shift || 3;
-  const m = options.m || 26;
-
+  const { resultText, rows } = processText(text, shift, -1);
   const sanitized = sanitizeAZ(text);
-
-  const rows = [];
-  let resultText = '';
-
-  for (let i = 0; i < sanitized.length; i++) {
-    const char = sanitized[i];
-    const inputNum = charToNumAZ(char);
-    const outputNum = mod(inputNum - shift, m);
-    const outputChar = numToCharAZ(outputNum);
-
-    rows.push({
-      char,
-      inputNum,
-      shift,
-      outputNum,
-      outputChar
-    });
-
-    resultText += outputChar;
-  }
 
   const explain = {
     summary: [
       `Sanitized input: "${sanitized}"`,
       `Shift: ${shift}`
     ],
-    facts: {
-      m,
-      shift
-    },
-    tables: [],
+    facts: { m: 26, shift },
     rows,
     notes: []
   };

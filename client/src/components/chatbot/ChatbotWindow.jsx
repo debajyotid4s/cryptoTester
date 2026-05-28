@@ -9,7 +9,7 @@ export default function ChatbotWindow({ isOpen, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
   const [inputText, setInputText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [algorithmContext, setAlgorithmContext] = useState(null);
+  const algorithmContext = null;
 
   const messagesEndRef = useRef(null);
   const streamBufferRef = useRef("");
