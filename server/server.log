@@ -1,6 +1,0 @@
-
-> server@1.0.0 start
-> node src/app.js
-
-Server running on http://localhost:8080 *
-Terminated
