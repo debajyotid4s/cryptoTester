@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import FantasyMap from "../components/map/FantasyMap";
+import ChatbotButton from "../components/chatbot/ChatbotButton";
+import ChatbotWindow from "../components/chatbot/ChatbotWindow";
 
 export default function Home() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   return (
     <div className="w-full bg-[radial-gradient(ellipse_at_center,_#1a2035_0%,_#0a0d12_70%)]">
       <motion.div
@@ -10,7 +15,12 @@ export default function Home() {
         transition={{ duration: 0.1 }}
         className="w-full"
       >
-        <FantasyMap />
+        <FantasyMap isChatOpen={isChatOpen} />
+        <ChatbotButton isOpen={isChatOpen} onOpen={() => setIsChatOpen(true)} />
+        <ChatbotWindow
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+        />
       </motion.div>
     </div>
   );

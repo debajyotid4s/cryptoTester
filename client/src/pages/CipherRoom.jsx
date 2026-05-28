@@ -6,6 +6,8 @@ import { CIPHER_ALGORITHMS, encrypt, decrypt } from "../services/cryptoService";
 import Toast from "../components/ui/Toast";
 import KeyFactorCard from "../components/cipher/KeyFactorCard";
 import NumberInput from "../components/ui/NumberInput";
+import ChatbotButton from "../components/chatbot/ChatbotButton";
+import ChatbotWindow from "../components/chatbot/ChatbotWindow";
 
 const KINGDOM_THEMES = {
   caesar: {
@@ -54,6 +56,7 @@ export default function CipherRoom() {
   const [lastResult, setLastResult] = useState(null);
   const [toast, setToast] = useState(null);
   const [params, setParams] = useState(getDefaultParams(algo));
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const cipherData = CIPHER_ALGORITHMS[algo];
   const theme = KINGDOM_THEMES[algo] || KINGDOM_THEMES.caesar;
@@ -412,6 +415,9 @@ export default function CipherRoom() {
           onClose={() => setToast(null)}
         />
       )}
+
+      <ChatbotButton isOpen={isChatOpen} onOpen={() => setIsChatOpen(true)} />
+      <ChatbotWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

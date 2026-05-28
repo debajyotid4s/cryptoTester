@@ -96,7 +96,7 @@ function hexAlpha(hex, a) {
   return `rgba(${r},${g},${b},${a})`;
 }
 
-export default function FantasyMap() {
+export default function FantasyMap({ isChatOpen = false }) {
   const navigate = useNavigate();
   const [activeTerritory, setActiveTerritory] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -104,6 +104,7 @@ export default function FantasyMap() {
   const containerRef = useRef(null);
 
   const handleMouseMove = (e) => {
+    if (isChatOpen) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       let x = e.clientX - rect.left + 14;
@@ -123,11 +124,13 @@ export default function FantasyMap() {
   };
 
   const handleMouseEnter = (id) => {
+    if (isChatOpen) return;
     setActiveTerritory(id);
     setIsHovered(id);
   };
 
   const handleMouseLeave = () => {
+    if (isChatOpen) return;
     setActiveTerritory(null);
     setIsHovered(null);
   };
@@ -138,7 +141,7 @@ export default function FantasyMap() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-screen"
+      className={`relative w-full min-h-screen ${isChatOpen ? "pointer-events-none" : ""}`}
       style={{ background: "#0d1117", overflow: "visible" }}
       onMouseLeave={handleMouseLeave}
     >
