@@ -9,6 +9,14 @@ const MODELS = [
 ];
 
 const MAX_MESSAGES = 20;
+const RETRY_DELAY_MS = 1000;
+
+const factCache = new Map();
+const FACT_CACHE_TTL = 60 * 60 * 1000;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const DEFAULT_SYSTEM_PROMPT = `You are a knowledgeable cryptography assistant in a fantasy realm called "Cryptographic Realm". You help users understand classical ciphers.
 
@@ -163,7 +171,9 @@ router.post("/", async (req, res) => {
 
     let lastError = null;
 
-    for (const model of MODELS) {
+    for (const [i, model] of MODELS.entries()) {
+      if (i > 0) await sleep(RETRY_DELAY_MS);
+
       const { error, response } = await tryModel(model, body, apiKey);
 
       if (error) {
@@ -213,6 +223,12 @@ router.post("/fact", async (req, res) => {
       return res.status(400).json({ error: "Invalid cipher" });
     }
 
+    const cacheKey = `${kingdom}:${cipher}`;
+    const cached = factCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < FACT_CACHE_TTL) {
+      return res.json({ fact: cached.text });
+    }
+
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: "Chat service not configured" });
@@ -236,7 +252,9 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
 
     let lastError = null;
 
-    for (const model of MODELS) {
+    for (const [i, model] of MODELS.entries()) {
+      if (i > 0) await sleep(RETRY_DELAY_MS);
+
       const { error, data } = await tryModelNonStreaming(model, body, apiKey);
 
       if (error) {
@@ -248,6 +266,7 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
       }
 
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      factCache.set(cacheKey, { text, timestamp: Date.now() });
       return res.json({ fact: text });
     }
 
