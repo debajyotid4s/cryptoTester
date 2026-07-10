@@ -9,7 +9,7 @@ export default function Layout() {
       <div className="relative z-10">
         <Navbar />
         <main className="pt-16">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0, y: 10 }}
