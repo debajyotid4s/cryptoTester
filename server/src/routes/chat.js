@@ -243,7 +243,7 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
         if (isRateLimitError(error.status, error.body)) {
           continue;
         }
-        return res.status(502).json({ error: "AI service temporarily unavailable" });
+        return res.status(502).json({ error: "AI service temporarily unavailable", debug: error.body });
       }
 
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
