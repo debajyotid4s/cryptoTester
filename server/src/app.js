@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
 const hillRoutes = require("./routes/hill");
 const playfairRoutes = require("./routes/playfair");
 const vigenereRoutes = require("./routes/vigenere");
@@ -53,26 +52,6 @@ app.use("/api", (req, res, next) => {
 
 // Body size limit
 app.use(express.json({ limit: "100kb" }));
-
-// Rate limiting
-const chatLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 20,
-  message: { error: "Too many requests. Please try again later." },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const globalLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 100,
-  message: { error: "Too many requests. Please try again later." },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use("/api", globalLimiter);
-app.use("/api/chat", chatLimiter);
 
 // API routes MUST come before static files
 app.use("/api/health", healthRoutes);
