@@ -4,8 +4,8 @@ const { requireString } = require("../utils/validate");
 const router = express.Router();
 
 const MODELS = [
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
+  "gemini-2.5-flash",
+  "gemini-3.5-flash",
 ];
 
 const MAX_MESSAGES = 20;
@@ -178,6 +178,7 @@ router.post("/", async (req, res) => {
 
       if (error) {
         lastError = error;
+        console.error(`[chat] model=${model} status=${error.status} body=${error.body?.slice(0, 200)}`);
         if (isRetryableError(error.status, error.body)) {
           continue;
         }
@@ -187,8 +188,9 @@ router.post("/", async (req, res) => {
       return await streamResponse(response, res);
     }
 
-    return res.status(429).json({
-      error: "AI service is rate-limited. Please try again later.",
+    console.error(`[chat] all models exhausted: ${JSON.stringify(lastError)}`);
+    return res.status(503).json({
+      error: "AI service unavailable. Please try again later.",
     });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -259,6 +261,7 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
 
       if (error) {
         lastError = error;
+        console.error(`[fact] model=${model} status=${error.status} body=${error.body?.slice(0, 200)}`);
         if (isRetryableError(error.status, error.body)) {
           continue;
         }
@@ -270,6 +273,7 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
       return res.json({ fact: text });
     }
 
+    console.error(`[fact] all models exhausted: ${JSON.stringify(lastError)}`);
     return res.status(429).json({
       error: "AI service is rate-limited. Please try again later.",
     });
