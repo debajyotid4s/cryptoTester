@@ -1,15 +1,15 @@
 const express = require("express");
 const { generateKeys, encrypt, decrypt } = require("../algos/rsa");
-const { requireString } = require("../utils/validate");
+const { requireString, requirePositiveInt, requireOptionalPositiveInt } = require("../utils/validate");
 const { errorResponse } = require("../utils/response");
 
 const router = express.Router();
 
 router.post("/generate", (req, res) => {
   try {
-    const p = req.body.p || undefined;
-    const q = req.body.q || undefined;
-    const e = req.body.e || undefined;
+    const p = requireOptionalPositiveInt(req.body.p, "p");
+    const q = requireOptionalPositiveInt(req.body.q, "q");
+    const e = requireOptionalPositiveInt(req.body.e, "e");
     const keys = generateKeys({ p, q, e });
 
     return res.json({ keys });
@@ -21,10 +21,14 @@ router.post("/generate", (req, res) => {
 router.post("/encrypt", (req, res) => {
   try {
     const text = requireString(req.body.text, "text");
-    const { e, n } = req.body.params || {};
-    if (!e || !n) throw new Error("Public key (e, n) is required");
+    const params = req.body.params || {};
+    const e = requirePositiveInt(params.e, "e");
+    const n = requirePositiveInt(params.n, "n");
+    const p = requireOptionalPositiveInt(params.p, "p");
+    const q = requireOptionalPositiveInt(params.q, "q");
+    const phi = requireOptionalPositiveInt(params.phi, "phi");
 
-    const result = encrypt(text, { e, n, p: req.body.params.p, q: req.body.params.q, phi: req.body.params.phi });
+    const result = encrypt(text, { e, n, p, q, phi });
 
     return res.json({
       result: result.result,
@@ -38,10 +42,14 @@ router.post("/encrypt", (req, res) => {
 router.post("/decrypt", (req, res) => {
   try {
     const text = requireString(req.body.text, "text");
-    const { d, n } = req.body.params || {};
-    if (!d || !n) throw new Error("Private key (d, n) is required");
+    const params = req.body.params || {};
+    const d = requirePositiveInt(params.d, "d");
+    const n = requirePositiveInt(params.n, "n");
+    const p = requireOptionalPositiveInt(params.p, "p");
+    const q = requireOptionalPositiveInt(params.q, "q");
+    const phi = requireOptionalPositiveInt(params.phi, "phi");
 
-    const result = decrypt(text, { d, n, p: req.body.params.p, q: req.body.params.q, phi: req.body.params.phi });
+    const result = decrypt(text, { d, n, p, q, phi });
 
     return res.json({
       result: result.result,

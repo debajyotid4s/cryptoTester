@@ -33,9 +33,9 @@ router.post("/decrypt", (req, res) => {
     const padChar = requirePadCharAZ(req.body.params?.padChar);
     const stripPadding =
       req.body.params?.stripPadding !== undefined
-        ? req.body.params.stripPadding
+        ? !!req.body.params.stripPadding
         : false;
-    const padAdded = req.body.params?.padAdded || 0;
+    const padAdded = Math.max(0, parseInt(req.body.params?.padAdded, 10) || 0);
     const padAddedPerWord = req.body.params?.padAddedPerWord;
 
     const result = decrypt(text, matrix, {

@@ -1,15 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "";
+import { apiPostRaw } from "./http";
 
-/**
- * Send a chat message and stream the response.
- *
- * @param {Object}   options
- * @param {Array}    options.messages           - Full conversation history [{role, content}]
- * @param {Object}   options.algorithmContext   - { kingdom, cipher } | null
- * @param {Function} options.onChunk            - Called with each new token string
- * @param {Function} options.onDone             - Called when stream completes
- * @param {Function} options.onError            - Called with error message string
- */
 export async function sendMessage({
   messages,
   algorithmContext = null,
@@ -20,11 +10,7 @@ export async function sendMessage({
   let response;
 
   try {
-    response = await fetch(`${API_URL}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, algorithmContext }),
-    });
+    response = await apiPostRaw("/api/chat", { messages, algorithmContext });
   } catch {
     onError("Cannot connect to server. Is the backend running?");
     return;
@@ -36,7 +22,6 @@ export async function sendMessage({
     return;
   }
 
-  // ── Read SSE stream ──────────────────────────────────────────────────────────
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
@@ -48,11 +33,11 @@ export async function sendMessage({
 
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
-      buffer = lines.pop(); // Keep incomplete line in buffer
+      buffer = lines.pop();
 
       for (const line of lines) {
         if (line.startsWith("data: ")) {
-          const data = line.slice(6); // Remove "data: " prefix
+          const data = line.slice(6);
 
           if (data === "[DONE]") {
             onDone();
@@ -65,14 +50,13 @@ export async function sendMessage({
             if (token) {
               onChunk(token);
             }
-          } catch (e) {
-            console.error("Failed to parse chunk:", e);
+          } catch {
+            // skip unparseable chunks
           }
         }
       }
     }
 
-    // Process any remaining buffer
     if (buffer.startsWith("data: ")) {
       const data = buffer.slice(6);
       if (data === "[DONE]") {
@@ -84,8 +68,8 @@ export async function sendMessage({
           if (token) {
             onChunk(token);
           }
-        } catch (e) {
-          console.error("Failed to parse final chunk:", e);
+        } catch {
+          // skip
         }
       }
     }

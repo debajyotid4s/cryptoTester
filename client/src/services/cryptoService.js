@@ -1,3 +1,5 @@
+import { apiPost } from "./http";
+
 export const CIPHER_ALGORITHMS = {
   rsa: {
     id: "rsa",
@@ -53,39 +55,17 @@ export const CIPHER_ALGORITHMS = {
   },
 };
 
-const API_URL = import.meta.env.VITE_API_URL || "";
-
 export async function encrypt(algo, text, params) {
-  const response = await fetch(`${API_URL}/api/${algo}/encrypt`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, params }),
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Encryption failed");
+  const data = await apiPost(`/api/${algo}/encrypt`, { text, params });
   return data;
 }
 
 export async function decrypt(algo, text, params) {
-  const response = await fetch(`${API_URL}/api/${algo}/decrypt`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, params }),
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Decryption failed");
+  const data = await apiPost(`/api/${algo}/decrypt`, { text, params });
   return data;
 }
 
 export async function generateKeys(algo, params = {}) {
-  const response = await fetch(`${API_URL}/api/${algo}/generate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(params),
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Key generation failed");
+  const data = await apiPost(`/api/${algo}/generate`, params);
   return data;
 }

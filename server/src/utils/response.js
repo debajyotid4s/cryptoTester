@@ -1,10 +1,6 @@
-function errorResponse(res, err, code = "CIPHER_ERROR") {
+function errorResponse(res, err) {
   res.status(400).json({
     error: err.message,
-    details: {
-      code,
-      timestamp: new Date().toISOString(),
-    },
   });
 }
 

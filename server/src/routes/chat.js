@@ -1,4 +1,5 @@
 const express = require("express");
+const { requireString } = require("../utils/validate");
 
 const router = express.Router();
 
@@ -6,6 +7,8 @@ const MODELS = [
   "gemini-2.5-flash",
   "gemini-1.5-flash",
 ];
+
+const MAX_MESSAGES = 20;
 
 const DEFAULT_SYSTEM_PROMPT = `You are a knowledgeable cryptography assistant in a fantasy realm called "Cryptographic Realm". You help users understand classical ciphers.
 
@@ -19,7 +22,7 @@ When answering, be educational and use examples. Keep responses concise.`;
 
 function isRateLimitError(status, body) {
   if (status === 429) return true;
-  if (body && /rate|limit|RPD|RPM|quota|resource.*exhausted|too many/i.test(body)) return true;
+  if (body && /rate|limit|quota|exhausted|too many/i.test(body)) return true;
   return false;
 }
 
@@ -77,7 +80,7 @@ function streamResponse(response, res) {
                     res.write(`data: ${chunk}\n\n`);
                   }
                 } catch {
-                  res.write(`data: ${data}\n\n`);
+                  // skip unparseable chunks
                 }
               }
             }
@@ -97,7 +100,7 @@ function streamResponse(response, res) {
                 res.write(`data: ${chunk}\n\n`);
               }
             } catch {
-              res.write(`data: ${data}\n\n`);
+              // skip
             }
           }
         }
@@ -105,7 +108,7 @@ function streamResponse(response, res) {
         res.write("data: [DONE]\n\n");
         res.end();
       } catch (err) {
-        res.write(`data: {"error": "${err.message}"}\n\n`);
+        res.write(`data: {"error": "Stream error"}\n\n`);
         res.write("data: [DONE]\n\n");
         res.end();
       }
@@ -122,9 +125,19 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "messages array is required" });
     }
 
+    if (messages.length > MAX_MESSAGES) {
+      return res.status(400).json({ error: `Too many messages (max ${MAX_MESSAGES})` });
+    }
+
+    for (const msg of messages) {
+      if (!msg.role || typeof msg.content !== "string" || msg.content.length > 500) {
+        return res.status(400).json({ error: "Invalid message format" });
+      }
+    }
+
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: "OPENROUTER_API_KEY not configured on server" });
+      return res.status(500).json({ error: "Chat service not configured" });
     }
 
     const systemMessage = {
@@ -157,21 +170,17 @@ router.post("/", async (req, res) => {
         if (isRateLimitError(error.status, error.body)) {
           continue;
         }
-        return res.status(502).json({
-          error: `Gemini API error (${model}): ${error.status}`,
-          details: error.body,
-        });
+        return res.status(502).json({ error: "AI service temporarily unavailable" });
       }
 
       return await streamResponse(response, res);
     }
 
     return res.status(429).json({
-      error: "All models are rate-limited. Please try again later.",
-      details: lastError ? lastError.body : null,
+      error: "AI service is rate-limited. Please try again later.",
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -196,10 +205,16 @@ async function tryModelNonStreaming(model, body, apiKey) {
 router.post("/fact", async (req, res) => {
   try {
     const { kingdom, cipher } = req.body;
+    if (!kingdom || typeof kingdom !== "string" || kingdom.length > 100) {
+      return res.status(400).json({ error: "Invalid kingdom" });
+    }
+    if (!cipher || typeof cipher !== "string" || cipher.length > 100) {
+      return res.status(400).json({ error: "Invalid cipher" });
+    }
 
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: "OPENROUTER_API_KEY not configured on server" });
+      return res.status(500).json({ error: "Chat service not configured" });
     }
 
     const factPrompt = `You are a knowledgeable cryptography assistant in a fantasy realm called "Cryptographic Realm".
@@ -228,10 +243,7 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
         if (isRateLimitError(error.status, error.body)) {
           continue;
         }
-        return res.status(502).json({
-          error: `Gemini API error (${model}): ${error.status}`,
-          details: error.body,
-        });
+        return res.status(502).json({ error: "AI service temporarily unavailable" });
       }
 
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -239,11 +251,10 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
     }
 
     return res.status(429).json({
-      error: "All models are rate-limited. Please try again later.",
-      details: lastError ? lastError.body : null,
+      error: "AI service is rate-limited. Please try again later.",
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
