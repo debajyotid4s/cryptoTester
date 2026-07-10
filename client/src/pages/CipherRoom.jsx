@@ -199,7 +199,7 @@ export default function CipherRoom() {
 
   return (
     <div
-      className="min-h-[calc(100vh-5rem)] relative overflow-hidden"
+      className="h-full relative overflow-y-auto"
       style={{
         background: `radial-gradient(circle at 50% 30%, ${theme.color}08 0%, transparent 50%)`,
       }}
