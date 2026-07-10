@@ -171,9 +171,9 @@ export default function FantasyMap({ isChatOpen = false }) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen flex items-center justify-center relative overflow-hidden"
+      className="w-full flex items-center justify-center relative overflow-hidden"
+      style={{ height: "calc(100vh - 4rem)", pointerEvents: isChatOpen ? "none" : "auto" }}
       onMouseLeave={handleMouseLeave}
-      style={{ pointerEvents: isChatOpen ? "none" : "auto" }}
     >
       {/* Map background layer */}
       <div className="absolute inset-0" style={{
