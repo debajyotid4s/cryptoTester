@@ -4,7 +4,7 @@ const { requireString } = require("../utils/validate");
 const router = express.Router();
 
 const MODELS = [
-  "gemini-2.5-flash",
+  "gemini-2.0-flash",
   "gemini-1.5-flash",
 ];
 
@@ -20,9 +20,10 @@ Available ciphers:
 
 When answering, be educational and use examples. Keep responses concise.`;
 
-function isRateLimitError(status, body) {
+function isRetryableError(status, body) {
   if (status === 429) return true;
-  if (body && /rate|limit|quota|exhausted|too many/i.test(body)) return true;
+  if (status === 404) return true;
+  if (body && /rate|limit|quota|exhausted|too many|no longer available/i.test(body)) return true;
   return false;
 }
 
@@ -167,7 +168,7 @@ router.post("/", async (req, res) => {
 
       if (error) {
         lastError = error;
-        if (isRateLimitError(error.status, error.body)) {
+        if (isRetryableError(error.status, error.body)) {
           continue;
         }
         return res.status(502).json({ error: "AI service temporarily unavailable" });
@@ -240,10 +241,10 @@ Keep it to 2-3 short paragraphs. Be concise but educational. Write in a voice th
 
       if (error) {
         lastError = error;
-        if (isRateLimitError(error.status, error.body)) {
+        if (isRetryableError(error.status, error.body)) {
           continue;
         }
-        return res.status(502).json({ error: "AI service temporarily unavailable", debug: error.body });
+        return res.status(502).json({ error: "AI service temporarily unavailable" });
       }
 
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
