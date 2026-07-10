@@ -8,7 +8,7 @@ export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
-    <div className="w-full bg-[radial-gradient(ellipse_at_center,_#1a2035_0%,_#0a0d12_70%)] relative">
+    <div className="w-full relative">
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
