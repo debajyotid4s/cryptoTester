@@ -1,18 +1,9 @@
 const express = require("express");
 const { encrypt, decrypt } = require("../algos/caesar");
 const { requireString } = require("../utils/validate");
+const { errorResponse } = require("../utils/response");
 
 const router = express.Router();
-
-function errorResponse(res, err) {
-  res.status(400).json({
-    error: err.message,
-    details: {
-      code: "CAESAR_CIPHER_ERROR",
-      timestamp: new Date().toISOString(),
-    },
-  });
-}
 
 function requireShift(x, fieldName) {
   if (x === undefined || x === null) {
@@ -36,7 +27,7 @@ router.post("/encrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "CAESAR_CIPHER_ERROR");
   }
 });
 
@@ -52,7 +43,7 @@ router.post("/decrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "CAESAR_CIPHER_ERROR");
   }
 });
 

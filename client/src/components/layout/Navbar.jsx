@@ -6,10 +6,6 @@ import { useState } from 'react'
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
-  const isActive = (path) => {
-    if (path === '/') return location.pathname === '/' || location.pathname === '/cryptoTester/'
-    return location.pathname.includes(path)
-  }
 
   return (
     <nav className="sticky top-0 z-50 w-full px-8 py-4 flex items-center justify-between bg-black/60 backdrop-blur-md border-b border-white/10">

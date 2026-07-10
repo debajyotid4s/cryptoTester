@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Loader, GripHorizontal } from "lucide-react";
+import { X, Send, Loader } from "lucide-react";
 import { sendMessage } from "../../services/chatService";
 
 const MIN_WIDTH = 320;
@@ -19,7 +19,6 @@ export default function ChatbotWindow({ isOpen, onClose }) {
     height: DEFAULT_HEIGHT,
   });
   const [isResizing, setIsResizing] = useState(false);
-  const algorithmContext = null;
 
   const messagesEndRef = useRef(null);
   const streamBufferRef = useRef("");
@@ -79,7 +78,7 @@ export default function ChatbotWindow({ isOpen, onClose }) {
 
     await sendMessage({
       messages: newMessages,
-      algorithmContext,
+      algorithmContext: null,
       onChunk: (token) => {
         streamBufferRef.current += token;
         setStreamingContent(streamBufferRef.current);

@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 
 const MODELS = [
-  "gemini-3.1-flash-lite",
   "gemini-2.5-flash",
+  "gemini-1.5-flash",
 ];
 
 const DEFAULT_SYSTEM_PROMPT = `You are a knowledgeable cryptography assistant in a fantasy realm called "Cryptographic Realm". You help users understand classical ciphers.

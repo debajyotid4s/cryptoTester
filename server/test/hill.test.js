@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encrypt, decrypt } from './src/algos/hill2x2.js';
+import { encrypt, decrypt } from '../src/algos/hill2x2.js';
 
 const KEY = [[3, 3], [2, 5]];
 

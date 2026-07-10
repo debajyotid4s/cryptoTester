@@ -5,19 +5,9 @@ const {
   require2x2Matrix,
   requirePadCharAZ,
 } = require("../utils/validate");
+const { errorResponse } = require("../utils/response");
 
 const router = express.Router();
-
-function errorResponse(res, err) {
-  const status = 400;
-  res.status(status).json({
-    error: err.message,
-    details: {
-      code: "HILL_CIPHER_ERROR",
-      timestamp: new Date().toISOString(),
-    },
-  });
-}
 
 router.post("/encrypt", (req, res) => {
   try {
@@ -32,7 +22,7 @@ router.post("/encrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "HILL_CIPHER_ERROR");
   }
 });
 
@@ -61,7 +51,7 @@ router.post("/decrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "HILL_CIPHER_ERROR");
   }
 });
 

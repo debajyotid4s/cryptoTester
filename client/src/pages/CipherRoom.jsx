@@ -16,7 +16,6 @@ const KINGDOM_THEMES = {
     name: "Iron Dominion",
     borderClass: "kingdom-border-iron",
     textClass: "kingdom-text-iron",
-    glowClass: "glow-iron",
   },
   vigenere: {
     color: "#2dd4a0",
@@ -24,7 +23,6 @@ const KINGDOM_THEMES = {
     name: "Emerald Archives",
     borderClass: "kingdom-border-emerald",
     textClass: "kingdom-text-emerald",
-    glowClass: "glow-emerald",
   },
   playfair: {
     color: "#5b9bd5",
@@ -32,7 +30,6 @@ const KINGDOM_THEMES = {
     name: "Frost Citadel",
     borderClass: "kingdom-border-frost",
     textClass: "kingdom-text-frost",
-    glowClass: "glow-frost",
   },
   hill: {
     color: "#f5a623",
@@ -40,7 +37,6 @@ const KINGDOM_THEMES = {
     name: "Golden Kingdom",
     borderClass: "kingdom-border-gold",
     textClass: "kingdom-text-gold",
-    glowClass: "glow-gold",
   },
 };
 
@@ -155,10 +151,8 @@ export default function CipherRoom() {
     try {
       await navigator.clipboard.writeText(outputText);
       showToast("Copied to clipboard", "success");
-    } catch {
-      document.execCommand("copy");
-      showToast("Copied to clipboard", "success");
-    }
+    } catch {}
+
   };
 
   const handleSwap = () => {

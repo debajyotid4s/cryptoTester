@@ -1,18 +1,9 @@
 const express = require("express");
 const { encrypt, decrypt } = require("../algos/playfair");
 const { requireString } = require("../utils/validate");
+const { errorResponse } = require("../utils/response");
 
 const router = express.Router();
-
-function errorResponse(res, err) {
-  res.status(400).json({
-    error: err.message,
-    details: {
-      code: "PLAYFAIR_CIPHER_ERROR",
-      timestamp: new Date().toISOString(),
-    },
-  });
-}
 
 function requireKey(x, fieldName) {
   if (x === undefined || x === null || x === "") {
@@ -40,7 +31,7 @@ router.post("/encrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "PLAYFAIR_CIPHER_ERROR");
   }
 });
 
@@ -56,7 +47,7 @@ router.post("/decrypt", (req, res) => {
       explain: result.explain,
     });
   } catch (err) {
-    return errorResponse(res, err);
+    return errorResponse(res, err, "PLAYFAIR_CIPHER_ERROR");
   }
 });
 
