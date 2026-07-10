@@ -5,3 +5,4 @@ dist/
 .DS_Store
 *.log
 .vite/
+PROJECT_DOCUMENTATION.txt
