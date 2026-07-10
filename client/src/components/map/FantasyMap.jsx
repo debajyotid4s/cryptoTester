@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TERRITORIES = {
-  caesar: {
+  rsa: {
     path: "M0,0 L410,0 L390,30 L420,55 L400,90 L380,120 L350,155 L330,180 L310,210 L290,235 L270,210 L240,220 L210,200 L180,210 L150,200 L120,210 L90,200 L60,215 L30,210 L0,220 Z",
     fillColor: "#3d1a1a",
   },
@@ -21,7 +21,7 @@ const TERRITORIES = {
 };
 
 const TERRAIN_ICONS = {
-  caesar: [
+  rsa: [
     { x: 70, y: 50 }, { x: 120, y: 80 }, { x: 200, y: 60 },
     { x: 300, y: 100 }, { x: 150, y: 150 }, { x: 80, y: 180 },
     { x: 250, y: 170 },
@@ -82,13 +82,12 @@ function Wheat({ cx, cy, color }) {
   );
 }
 
-function CaesarEmblem() {
+function RsaEmblem() {
   return (
     <g transform="translate(140, 74)" opacity="0.85">
       <circle cx="0" cy="0" r="16" fill="none" stroke="#e08080" strokeWidth="1.2" />
-      <circle cx="0" cy="0" r="12" fill="none" stroke="#e08080" strokeWidth="0.8" strokeDasharray="2.5,2.5" />
-      <circle cx="0" cy="0" r="8" fill="none" stroke="#e08080" strokeWidth="0.8" strokeDasharray="1.5,3" />
-      <circle cx="0" cy="0" r="2.5" fill="#e08080" opacity="0.6" />
+      <text x="0" y="5" textAnchor="middle" fontSize="12" fontFamily="monospace" fill="#e08080" fontWeight="bold">K</text>
+      <text x="0" y="-7" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#e08080" opacity="0.7">&#123;e,d&#125;</text>
     </g>
   );
 }
@@ -145,7 +144,7 @@ export default function FantasyMap({ isChatOpen = false }) {
   const handleTerritoryClick = (territoryId) => {
     if (isChatOpen) return;
     const routes = {
-      caesar: "/cipher/caesar",
+      rsa: "/cipher/rsa",
       vigenere: "/cipher/vigenere",
       playfair: "/cipher/playfair",
       hill: "/cipher/hill",
@@ -163,7 +162,7 @@ export default function FantasyMap({ isChatOpen = false }) {
   };
 
   const terrainIcons = [
-    { id: "caesar", Icon: Mountain, color: "#e08080", positions: TERRAIN_ICONS.caesar },
+    { id: "rsa", Icon: Mountain, color: "#e08080",     positions: TERRAIN_ICONS.rsa },
     { id: "vigenere", Icon: Tree, color: "#60c0a0", positions: TERRAIN_ICONS.vigenere },
     { id: "playfair", Icon: Crystal, color: "#7090c0", positions: TERRAIN_ICONS.playfair },
     { id: "hill", Icon: Wheat, color: "#e0a040", positions: TERRAIN_ICONS.hill },
@@ -265,22 +264,22 @@ export default function FantasyMap({ isChatOpen = false }) {
           <path d="M674,406 Q666,414 666,414" strokeWidth="0.5" />
         </g>
 
-        {/* IRON DOMINION - Caesar */}
+        {/* IRON SANCTUM - RSA */}
         <path
-          d={TERRITORIES.caesar.path}
-          fill={TERRITORIES.caesar.fillColor}
+          d={TERRITORIES.rsa.path}
+          fill={TERRITORIES.rsa.fillColor}
           stroke="none"
           style={{
             cursor: "pointer",
-            opacity: hoveredTerritory === "caesar" ? 1 : 0.9,
-            filter: hoveredTerritory === "caesar" ? "brightness(1.2)" : "brightness(1)",
+            opacity: hoveredTerritory === "rsa" ? 1 : 0.9,
+            filter: hoveredTerritory === "rsa" ? "brightness(1.2)" : "brightness(1)",
             transition: "all 0.3s ease",
           }}
-          onMouseEnter={() => handleMouseEnter("caesar")}
-          onClick={() => handleTerritoryClick("caesar")}
+          onMouseEnter={() => handleMouseEnter("rsa")}
+          onClick={() => handleTerritoryClick("rsa")}
         />
         <path
-          d={TERRITORIES.caesar.path}
+          d={TERRITORIES.rsa.path}
           fill="url(#hatch-iron)"
           stroke="none"
           pointerEvents="none"
@@ -386,7 +385,7 @@ export default function FantasyMap({ isChatOpen = false }) {
         </g>
 
         {/* Kingdom emblems */}
-        <CaesarEmblem />
+        <RsaEmblem />
         <VigenereEmblem />
         <PlayfairEmblem />
         <HillEmblem />
@@ -404,7 +403,7 @@ export default function FantasyMap({ isChatOpen = false }) {
           letterSpacing="2"
           style={{ textShadow: "0 2px 4px rgba(0,0,0,0.8)" }}
         >
-          IRON DOMINION
+          IRON SANCTUM
         </text>
         <text
           x="140"
@@ -417,7 +416,7 @@ export default function FantasyMap({ isChatOpen = false }) {
           letterSpacing="2"
           style={{ fontVariant: "small-caps" }}
         >
-          ⸻ Caesar Cipher ⸻
+          ⸻ RSA Cipher ⸻
         </text>
 
         <text

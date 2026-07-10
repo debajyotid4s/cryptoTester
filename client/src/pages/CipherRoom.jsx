@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin, Copy, Shuffle, AlertCircle } from "lucide-react";
-import { CIPHER_ALGORITHMS, encrypt, decrypt } from "../services/cryptoService";
+import { MapPin, Copy, Shuffle, AlertCircle, RefreshCw } from "lucide-react";
+import { CIPHER_ALGORITHMS, encrypt, decrypt, generateKeys } from "../services/cryptoService";
 import Toast from "../components/ui/Toast";
 import KeyFactorCard from "../components/cipher/KeyFactorCard";
+import AlgorithmFact from "../components/cipher/AlgorithmFact";
 import NumberInput from "../components/ui/NumberInput";
 import ChatbotButton from "../components/chatbot/ChatbotButton";
 import ChatbotWindow from "../components/chatbot/ChatbotWindow";
 
 const KINGDOM_THEMES = {
-  caesar: {
+  rsa: {
     color: "#e05252",
     light: "#f87575",
-    name: "Iron Dominion",
+    name: "Iron Sanctum",
     borderClass: "kingdom-border-iron",
     textClass: "kingdom-text-iron",
   },
@@ -55,19 +56,22 @@ export default function CipherRoom() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const cipherData = CIPHER_ALGORITHMS[algo];
-  const theme = KINGDOM_THEMES[algo] || KINGDOM_THEMES.caesar;
+  const theme = KINGDOM_THEMES[algo] || KINGDOM_THEMES.rsa;
+  const [rsaKeys, setRsaKeys] = useState(null);
 
   useEffect(() => {
     setParams(getDefaultParams(algo));
     setInputText("");
     setOutputText("");
     setError(null);
+    setRsaKeys(null);
+    if (algo === "rsa") handleGenerateKeys();
   }, [algo]);
 
   function getDefaultParams(algoId) {
     switch (algoId) {
-      case "caesar":
-        return { shift: 3 };
+      case "rsa":
+        return {};
       case "vigenere":
       case "playfair":
         return { key: "CIPHER", padChar: "X", stripPadding: true };
@@ -81,9 +85,19 @@ export default function CipherRoom() {
           stripPadding: true,
         };
       default:
-        return { shift: 3 };
+        return {};
     }
   }
+
+  const handleGenerateKeys = async () => {
+    try {
+      const data = await generateKeys("rsa");
+      setRsaKeys(data.keys);
+      showToast("New RSA key pair generated", "success");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const handleEncrypt = async () => {
     if (!inputText.trim()) {
@@ -94,10 +108,13 @@ export default function CipherRoom() {
     setError(null);
     try {
       const startTime = performance.now();
-      const data = await encrypt(algo, inputText.toUpperCase(), params);
+      const encryptParams = algo === "rsa" && rsaKeys
+        ? { e: rsaKeys.e, n: rsaKeys.n, p: rsaKeys.p, q: rsaKeys.q, phi: rsaKeys.phi }
+        : params;
+      const data = await encrypt(algo, inputText.toUpperCase(), encryptParams);
       const endTime = performance.now();
       setOutputText(data.result);
-      setLastResult(data);
+      setLastResult({ ...data, rsaKeys });
       showToast(
         `Encrypted in ${(endTime - startTime).toFixed(2)}ms`,
         "success",
@@ -119,11 +136,13 @@ export default function CipherRoom() {
     setError(null);
     try {
       const startTime = performance.now();
-      const decryptParams = { ...params };
-      if (params.stripPadding && lastResult?.explain?.padAdded) {
+      const decryptParams = algo === "rsa" && rsaKeys
+        ? { d: rsaKeys.d, n: rsaKeys.n, p: rsaKeys.p, q: rsaKeys.q, phi: rsaKeys.phi }
+        : { ...params };
+      if (algo !== "rsa" && params.stripPadding && lastResult?.explain?.padAdded) {
         decryptParams.padAdded = lastResult.explain.padAdded;
       }
-      if (params.stripPadding && lastResult?.explain?.padAddedPerWord) {
+      if (algo !== "rsa" && params.stripPadding && lastResult?.explain?.padAddedPerWord) {
         decryptParams.padAddedPerWord = lastResult.explain.padAddedPerWord;
       }
       const data = await decrypt(algo, inputText.toUpperCase(), decryptParams);
@@ -254,7 +273,14 @@ export default function CipherRoom() {
               </div>
             </div>
           </div>
-        </motion.div>
+          </motion.div>
+
+        <AlgorithmFact
+          algo={algo}
+          kingdom={theme.name}
+          cipher={cipherData.realm}
+          theme={theme}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div
@@ -299,6 +325,8 @@ export default function CipherRoom() {
               params={params}
               onChange={setParams}
               theme={theme}
+              rsaKeys={rsaKeys}
+              onGenerateKeys={handleGenerateKeys}
             />
 
             <div className="flex gap-3 mt-8">
@@ -408,21 +436,59 @@ export default function CipherRoom() {
   );
 }
 
-function ParameterFields({ algo, params, onChange, theme }) {
+function ParameterFields({ algo, params, onChange, theme, rsaKeys, onGenerateKeys }) {
   switch (algo) {
-    case "caesar":
+    case "rsa":
       return (
-        <div className="mt-4">
-          <label className="block text-sm text-realm-muted mb-3 font-cinzel uppercase tracking-wider">
-            Shift Value
-          </label>
-          <NumberInput
-            value={params.shift}
-            onChange={(val) => onChange({ ...params, shift: val })}
-            min={1}
-            max={25}
-            theme={theme}
-          />
+        <div className="space-y-4 mt-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onGenerateKeys}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-cinzel font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+              style={{
+                backgroundColor: theme.color,
+                color: "#0d1117",
+                boxShadow: `0 0 20px ${theme.color}40`,
+              }}
+            >
+              <RefreshCw size={16} />
+              Generate New Keys
+            </button>
+          </div>
+
+          {rsaKeys && (
+            <div className="bg-realm-bg/80 border rounded-lg p-4 space-y-2 font-mono text-xs" style={{ borderColor: `${theme.color}30` }}>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">Public Key (e, n):</span>
+                <span className="text-realm-text">({rsaKeys.e}, {rsaKeys.n})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">Private Key (d, n):</span>
+                <span className="text-realm-text">({rsaKeys.d}, {rsaKeys.n})</span>
+              </div>
+              <div className="border-t" style={{ borderColor: `${theme.color}20` }} />
+              <div className="flex justify-between">
+                <span className="text-realm-muted">p =</span>
+                <span className="text-realm-text">{rsaKeys.p}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">q =</span>
+                <span className="text-realm-text">{rsaKeys.q}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">n = p × q =</span>
+                <span className="text-realm-text">{rsaKeys.n}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">φ(n) =</span>
+                <span className="text-realm-text">{rsaKeys.phi}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-realm-muted">e × d mod φ(n) =</span>
+                <span className="text-realm-text">{(rsaKeys.e * rsaKeys.d) % rsaKeys.phi} ≡ 1</span>
+              </div>
+            </div>
+          )}
         </div>
       );
 

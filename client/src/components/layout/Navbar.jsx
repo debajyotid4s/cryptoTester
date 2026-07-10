@@ -32,7 +32,7 @@ export default function Navbar() {
           Realm Map
         </Link>
         <Link 
-          to="/cipher/caesar" 
+          to="/cipher/rsa" 
           className={`text-sm tracking-widest uppercase transition-colors duration-200 ${
             location.pathname.includes('/cipher') 
               ? 'text-white' 
@@ -65,7 +65,7 @@ export default function Navbar() {
               Realm Map
             </Link>
             <Link 
-              to="/cipher/caesar" 
+              to="/cipher/rsa" 
               onClick={() => setMobileOpen(false)}
               className="text-sm tracking-widest uppercase text-white/60 hover:text-white"
             >

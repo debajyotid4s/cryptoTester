@@ -3,10 +3,10 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const hillRoutes = require("./routes/hill");
-const caesarRoutes = require("./routes/caesar");
 const playfairRoutes = require("./routes/playfair");
 const vigenereRoutes = require("./routes/vigenere");
 const healthRoutes = require("./routes/health");
+const rsaRoutes = require("./routes/rsa");
 const chatRoutes = require("./routes/chat");
 
 const app = express();
@@ -31,9 +31,9 @@ app.use(express.json({ limit: "5mb" }));
 // API routes MUST come before static files
 app.use("/api/health", healthRoutes);
 app.use("/api/hill", hillRoutes);
-app.use("/api/caesar", caesarRoutes);
 app.use("/api/playfair", playfairRoutes);
 app.use("/api/vigenere", vigenereRoutes);
+app.use("/api/rsa", rsaRoutes);
 app.use("/api/chat", chatRoutes);
 
 // Static file serving for production build (if exists)

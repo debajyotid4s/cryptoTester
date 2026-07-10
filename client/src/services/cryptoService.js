@@ -1,16 +1,16 @@
 export const CIPHER_ALGORITHMS = {
-  caesar: {
-    id: "caesar",
-    name: "Iron Dominion",
-    realm: "Caesar Cipher",
+  rsa: {
+    id: "rsa",
+    name: "Iron Sanctum",
+    realm: "RSA Cipher",
     description:
-      "The ancient art of shifting letters by the power of Roman legions",
+      "The mathematical stronghold of asymmetric encryption, fortified by prime numbers",
     theme: "iron",
     color: "#dc2626",
     accentColor: "#ef4444",
     borderColor: "#991b1b",
-    invented: "100 BC",
-    securityLevel: "Low",
+    invented: "1977",
+    securityLevel: "High",
   },
   vigenere: {
     id: "vigenere",
@@ -76,5 +76,16 @@ export async function decrypt(algo, text, params) {
 
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Decryption failed");
+  return data;
+}
+
+export async function generateKeys(algo, params = {}) {
+  const response = await fetch(`${API_URL}/api/${algo}/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Key generation failed");
   return data;
 }
