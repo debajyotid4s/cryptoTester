@@ -211,10 +211,7 @@ export default function FantasyMap({ isChatOpen = false }) {
           zIndex: 1,
         }}
       >
-        <title>Fantasy map tessellation — full-coverage territory layout</title>
-        <desc>
-          Four kingdoms that share borders and cover the entire canvas with no gaps
-        </desc>
+
 
         <defs>
           {/* Roughen filter for hand-inked border effect */}
