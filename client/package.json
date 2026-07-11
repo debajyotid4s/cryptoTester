@@ -5,6 +5,7 @@
   "type": "module",
   "homepage": "https://debajyotid4s.github.io/cryptoTester",
   "scripts": {
+    "prebuild": "node ./scripts/write-version.mjs",
     "dev": "vite",
     "build": "vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",

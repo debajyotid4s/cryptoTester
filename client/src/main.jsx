@@ -4,36 +4,27 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./styles/index.css";
 
-const CACHE_RESET_FLAG = "__crypto_realm_cache_reset__";
+const VERSION_FILE = `${import.meta.env.BASE_URL}version.json`;
 
-async function clearLegacyClientState() {
+async function ensureFreshBuild() {
   if (typeof window === "undefined") return false;
-  if (sessionStorage.getItem(CACHE_RESET_FLAG) === "1") return false;
+  const currentVersion = new URLSearchParams(window.location.search).get("v");
 
-  let cleared = false;
+  try {
+    const response = await fetch(VERSION_FILE, { cache: "no-store" });
+    if (!response.ok) return false;
 
-  if ("serviceWorker" in navigator) {
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    if (registrations.length > 0) {
-      await Promise.all(
-        registrations.map((registration) => registration.unregister()),
-      );
-      cleared = true;
+    const payload = await response.json();
+    const latestVersion = payload.version;
+
+    if (latestVersion && currentVersion !== latestVersion) {
+      const nextUrl = new URL(window.location.href);
+      nextUrl.searchParams.set("v", latestVersion);
+      window.location.replace(nextUrl.toString());
+      return true;
     }
-  }
-
-  if ("caches" in window) {
-    const keys = await caches.keys();
-    if (keys.length > 0) {
-      await Promise.all(keys.map((key) => caches.delete(key)));
-      cleared = true;
-    }
-  }
-
-  if (cleared) {
-    sessionStorage.setItem(CACHE_RESET_FLAG, "1");
-    window.location.reload();
-    return true;
+  } catch {
+    return false;
   }
 
   return false;
@@ -42,7 +33,7 @@ async function clearLegacyClientState() {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 (async () => {
-  if (!(await clearLegacyClientState())) {
+  if (!(await ensureFreshBuild())) {
     root.render(
       <StrictMode>
         <BrowserRouter basename="/cryptoTester">
