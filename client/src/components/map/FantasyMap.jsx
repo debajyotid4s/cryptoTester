@@ -385,8 +385,11 @@ export default function FantasyMap({ isChatOpen = false }) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full flex items-center justify-center relative overflow-hidden"
-      style={{ pointerEvents: isChatOpen ? "none" : "auto" }}
+      className="w-full max-w-[1200px] mx-auto flex items-center justify-center relative overflow-hidden"
+      style={{
+        pointerEvents: isChatOpen ? "none" : "auto",
+        height: "min(72dvh, 42rem)",
+      }}
       onMouseLeave={handleMouseLeave}
     >
       {/* Map background layer */}

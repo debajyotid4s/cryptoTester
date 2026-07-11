@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <div className="min-h-dvh bg-[#0a0d12] flex flex-col">
       <Navbar />
-      <main className="flex-1 min-h-0 overflow-hidden">
+      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
         <AnimatePresence>
           <motion.div
             key={location.pathname}
