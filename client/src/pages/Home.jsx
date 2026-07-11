@@ -8,7 +8,7 @@ export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full min-h-full relative">
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -26,7 +26,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.1 }}
-        className="w-full h-full"
+        className="w-full min-h-full"
       >
         <FantasyMap isChatOpen={isChatOpen} />
         <ChatbotButton isOpen={isChatOpen} onOpen={() => setIsChatOpen(true)} />
