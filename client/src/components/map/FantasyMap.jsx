@@ -22,23 +22,39 @@ const TERRITORIES = {
 
 const TERRAIN_ICONS = {
   rsa: [
-    { x: 70, y: 50 }, { x: 120, y: 80 }, { x: 200, y: 60 },
-    { x: 300, y: 100 }, { x: 150, y: 150 }, { x: 80, y: 180 },
+    { x: 70, y: 50 },
+    { x: 120, y: 80 },
+    { x: 200, y: 60 },
+    { x: 300, y: 100 },
+    { x: 150, y: 150 },
+    { x: 80, y: 180 },
     { x: 250, y: 170 },
   ],
   vigenere: [
-    { x: 450, y: 30 }, { x: 520, y: 80 }, { x: 600, y: 50 },
-    { x: 500, y: 150 }, { x: 580, y: 130 }, { x: 630, y: 180 },
+    { x: 450, y: 30 },
+    { x: 520, y: 80 },
+    { x: 600, y: 50 },
+    { x: 500, y: 150 },
+    { x: 580, y: 130 },
+    { x: 630, y: 180 },
     { x: 540, y: 200 },
   ],
   playfair: [
-    { x: 40, y: 280 }, { x: 90, y: 250 }, { x: 160, y: 300 },
-    { x: 70, y: 350 }, { x: 130, y: 380 }, { x: 210, y: 310 },
+    { x: 40, y: 280 },
+    { x: 90, y: 250 },
+    { x: 160, y: 300 },
+    { x: 70, y: 350 },
+    { x: 130, y: 380 },
+    { x: 210, y: 310 },
     { x: 240, y: 370 },
   ],
   hill: [
-    { x: 350, y: 280 }, { x: 440, y: 260 }, { x: 510, y: 300 },
-    { x: 570, y: 280 }, { x: 420, y: 350 }, { x: 490, y: 380 },
+    { x: 350, y: 280 },
+    { x: 440, y: 260 },
+    { x: 510, y: 300 },
+    { x: 570, y: 280 },
+    { x: 420, y: 350 },
+    { x: 490, y: 380 },
     { x: 560, y: 360 },
   ],
 };
@@ -46,7 +62,14 @@ const TERRAIN_ICONS = {
 function Mountain({ cx, cy, color }) {
   return (
     <g transform={`translate(${cx},${cy})`} opacity="0.2">
-      <polyline points="-6,4 -3,-4 0,2 3,-5 6,4" fill="none" stroke={color} strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline
+        points="-6,4 -3,-4 0,2 3,-5 6,4"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </g>
   );
 }
@@ -55,9 +78,30 @@ function Tree({ cx, cy, color }) {
   return (
     <g transform={`translate(${cx},${cy})`} opacity="0.2">
       <line x1="0" y1="2" x2="0" y2="6" stroke={color} strokeWidth="0.8" />
-      <circle cx="0" cy="-1" r="3" fill="none" stroke={color} strokeWidth="0.6" />
-      <circle cx="-2" cy="0" r="2.5" fill="none" stroke={color} strokeWidth="0.6" />
-      <circle cx="2" cy="0" r="2.5" fill="none" stroke={color} strokeWidth="0.6" />
+      <circle
+        cx="0"
+        cy="-1"
+        r="3"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.6"
+      />
+      <circle
+        cx="-2"
+        cy="0"
+        r="2.5"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.6"
+      />
+      <circle
+        cx="2"
+        cy="0"
+        r="2.5"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.6"
+      />
     </g>
   );
 }
@@ -65,8 +109,22 @@ function Tree({ cx, cy, color }) {
 function Crystal({ cx, cy, color }) {
   return (
     <g transform={`translate(${cx},${cy})`} opacity="0.2">
-      <polygon points="0,-5 3,-1 2,4 -2,4 -3,-1" fill="none" stroke={color} strokeWidth="0.7" strokeLinejoin="round" />
-      <line x1="0" y1="-5" x2="0" y2="4" stroke={color} strokeWidth="0.4" opacity="0.5" />
+      <polygon
+        points="0,-5 3,-1 2,4 -2,4 -3,-1"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.7"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="0"
+        y1="-5"
+        x2="0"
+        y2="4"
+        stroke={color}
+        strokeWidth="0.4"
+        opacity="0.5"
+      />
     </g>
   );
 }
@@ -75,8 +133,23 @@ function Wheat({ cx, cy, color }) {
   return (
     <g transform={`translate(${cx},${cy})`} opacity="0.2">
       <line x1="0" y1="5" x2="0" y2="-2" stroke={color} strokeWidth="0.7" />
-      <ellipse cx="0" cy="-3" rx="1.5" ry="3" fill="none" stroke={color} strokeWidth="0.6" />
-      <line x1="-1.5" y1="-3" x2="-3" y2="-5" stroke={color} strokeWidth="0.5" />
+      <ellipse
+        cx="0"
+        cy="-3"
+        rx="1.5"
+        ry="3"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.6"
+      />
+      <line
+        x1="-1.5"
+        y1="-3"
+        x2="-3"
+        y2="-5"
+        stroke={color}
+        strokeWidth="0.5"
+      />
       <line x1="1.5" y1="-3" x2="3" y2="-5" stroke={color} strokeWidth="0.5" />
     </g>
   );
@@ -85,9 +158,36 @@ function Wheat({ cx, cy, color }) {
 function RsaEmblem() {
   return (
     <g transform="translate(140, 74)" opacity="0.85">
-      <circle cx="0" cy="0" r="16" fill="none" stroke="#e08080" strokeWidth="1.2" />
-      <text x="0" y="5" textAnchor="middle" fontSize="12" fontFamily="monospace" fill="#e08080" fontWeight="bold">K</text>
-      <text x="0" y="-7" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#e08080" opacity="0.7">&#123;e,d&#125;</text>
+      <circle
+        cx="0"
+        cy="0"
+        r="16"
+        fill="none"
+        stroke="#e08080"
+        strokeWidth="1.2"
+      />
+      <text
+        x="0"
+        y="5"
+        textAnchor="middle"
+        fontSize="12"
+        fontFamily="monospace"
+        fill="#e08080"
+        fontWeight="bold"
+      >
+        K
+      </text>
+      <text
+        x="0"
+        y="-7"
+        textAnchor="middle"
+        fontSize="7"
+        fontFamily="monospace"
+        fill="#e08080"
+        opacity="0.7"
+      >
+        &#123;e,d&#125;
+      </text>
     </g>
   );
 }
@@ -95,11 +195,33 @@ function RsaEmblem() {
 function VigenereEmblem() {
   return (
     <g transform="translate(555, 84)" opacity="0.85">
-      <rect x="-14" y="-14" width="28" height="28" fill="none" stroke="#60c0a0" strokeWidth="1" />
-      <line x1="-14" y1="-7" x2="14" y2="-7" stroke="#60c0a0" strokeWidth="0.5" />
+      <rect
+        x="-14"
+        y="-14"
+        width="28"
+        height="28"
+        fill="none"
+        stroke="#60c0a0"
+        strokeWidth="1"
+      />
+      <line
+        x1="-14"
+        y1="-7"
+        x2="14"
+        y2="-7"
+        stroke="#60c0a0"
+        strokeWidth="0.5"
+      />
       <line x1="-14" y1="0" x2="14" y2="0" stroke="#60c0a0" strokeWidth="0.5" />
       <line x1="-14" y1="7" x2="14" y2="7" stroke="#60c0a0" strokeWidth="0.5" />
-      <line x1="-7" y1="-14" x2="-7" y2="14" stroke="#60c0a0" strokeWidth="0.5" />
+      <line
+        x1="-7"
+        y1="-14"
+        x2="-7"
+        y2="14"
+        stroke="#60c0a0"
+        strokeWidth="0.5"
+      />
       <line x1="0" y1="-14" x2="0" y2="14" stroke="#60c0a0" strokeWidth="0.5" />
       <line x1="7" y1="-14" x2="7" y2="14" stroke="#60c0a0" strokeWidth="0.5" />
     </g>
@@ -109,15 +231,79 @@ function VigenereEmblem() {
 function PlayfairEmblem() {
   return (
     <g transform="translate(120, 284)" opacity="0.85">
-      <rect x="-14" y="-14" width="28" height="28" fill="none" stroke="#7090c0" strokeWidth="1" />
-      <line x1="-14" y1="-8.4" x2="14" y2="-8.4" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="-14" y1="-2.8" x2="14" y2="-2.8" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="-14" y1="2.8" x2="14" y2="2.8" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="-14" y1="8.4" x2="14" y2="8.4" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="-8.4" y1="-14" x2="-8.4" y2="14" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="-2.8" y1="-14" x2="-2.8" y2="14" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="2.8" y1="-14" x2="2.8" y2="14" stroke="#7090c0" strokeWidth="0.4" />
-      <line x1="8.4" y1="-14" x2="8.4" y2="14" stroke="#7090c0" strokeWidth="0.4" />
+      <rect
+        x="-14"
+        y="-14"
+        width="28"
+        height="28"
+        fill="none"
+        stroke="#7090c0"
+        strokeWidth="1"
+      />
+      <line
+        x1="-14"
+        y1="-8.4"
+        x2="14"
+        y2="-8.4"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="-14"
+        y1="-2.8"
+        x2="14"
+        y2="-2.8"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="-14"
+        y1="2.8"
+        x2="14"
+        y2="2.8"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="-14"
+        y1="8.4"
+        x2="14"
+        y2="8.4"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="-8.4"
+        y1="-14"
+        x2="-8.4"
+        y2="14"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="-2.8"
+        y1="-14"
+        x2="-2.8"
+        y2="14"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="2.8"
+        y1="-14"
+        x2="2.8"
+        y2="14"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="8.4"
+        y1="-14"
+        x2="8.4"
+        y2="14"
+        stroke="#7090c0"
+        strokeWidth="0.4"
+      />
     </g>
   );
 }
@@ -125,7 +311,15 @@ function PlayfairEmblem() {
 function HillEmblem() {
   return (
     <g transform="translate(490, 314)" opacity="0.85">
-      <rect x="-14" y="-14" width="28" height="28" fill="none" stroke="#e0a040" strokeWidth="1.2" />
+      <rect
+        x="-14"
+        y="-14"
+        width="28"
+        height="28"
+        fill="none"
+        stroke="#e0a040"
+        strokeWidth="1.2"
+      />
       <line x1="-14" y1="0" x2="14" y2="0" stroke="#e0a040" strokeWidth="0.7" />
       <line x1="0" y1="-14" x2="0" y2="14" stroke="#e0a040" strokeWidth="0.7" />
       <circle cx="-5" cy="-5" r="2" fill="#e0a040" opacity="0.5" />
@@ -162,10 +356,30 @@ export default function FantasyMap({ isChatOpen = false }) {
   };
 
   const terrainIcons = [
-    { id: "rsa", Icon: Mountain, color: "#e08080",     positions: TERRAIN_ICONS.rsa },
-    { id: "vigenere", Icon: Tree, color: "#60c0a0", positions: TERRAIN_ICONS.vigenere },
-    { id: "playfair", Icon: Crystal, color: "#7090c0", positions: TERRAIN_ICONS.playfair },
-    { id: "hill", Icon: Wheat, color: "#e0a040", positions: TERRAIN_ICONS.hill },
+    {
+      id: "rsa",
+      Icon: Mountain,
+      color: "#e08080",
+      positions: TERRAIN_ICONS.rsa,
+    },
+    {
+      id: "vigenere",
+      Icon: Tree,
+      color: "#60c0a0",
+      positions: TERRAIN_ICONS.vigenere,
+    },
+    {
+      id: "playfair",
+      Icon: Crystal,
+      color: "#7090c0",
+      positions: TERRAIN_ICONS.playfair,
+    },
+    {
+      id: "hill",
+      Icon: Wheat,
+      color: "#e0a040",
+      positions: TERRAIN_ICONS.hill,
+    },
   ];
 
   return (
@@ -176,25 +390,36 @@ export default function FantasyMap({ isChatOpen = false }) {
       onMouseLeave={handleMouseLeave}
     >
       {/* Map background layer */}
-      <div className="absolute inset-0" style={{
-        background: `
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
           radial-gradient(ellipse at 50% 40%, rgba(255,200,120,0.07) 0%, transparent 60%),
           radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%),
-          repeating-linear-gradient(0deg, rgba(212,175,122,0.04) 0px, transparent 1px, transparent 40px),
-          repeating-linear-gradient(90deg, rgba(212,175,122,0.04) 0px, transparent 1px, transparent 40px),
+          repeating-linear-gradient(0deg, rgba(212,175,122,0.02) 0px, transparent 1px, transparent 72px),
+          repeating-linear-gradient(90deg, rgba(212,175,122,0.018) 0px, transparent 1px, transparent 72px),
           #0a0806
-        `
-      }} />
+        `,
+        }}
+      />
 
       {/* Vignette overlay */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse at 50% 30%, transparent 40%, rgba(0,0,0,0.5) 100%)"
-      }} />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 30%, transparent 40%, rgba(0,0,0,0.5) 100%)",
+        }}
+      />
 
       {/* Candlelit glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse at 50% 45%, rgba(255,180,80,0.05) 0%, transparent 55%)"
-      }} />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 45%, rgba(255,180,80,0.05) 0%, transparent 55%)",
+        }}
+      />
 
       <svg
         width="100%"
@@ -210,38 +435,126 @@ export default function FantasyMap({ isChatOpen = false }) {
           zIndex: 1,
         }}
       >
-
-
         <defs>
           {/* Roughen filter for hand-inked border effect */}
           <filter id="roughen" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.025"
+              numOctaves="3"
+              result="noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="2"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
           </filter>
 
           {/* Decorative frame engraving pattern */}
-          <pattern id="frame-dots" patternUnits="userSpaceOnUse" width="6" height="6">
+          <pattern
+            id="frame-dots"
+            patternUnits="userSpaceOnUse"
+            width="6"
+            height="6"
+          >
             <circle cx="3" cy="3" r="0.5" fill="rgba(212,175,122,0.3)" />
           </pattern>
 
           {/* Hatch patterns */}
-          <pattern id="hatch-iron" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#a04040" strokeWidth="0.5" opacity="0.25" />
+          <pattern
+            id="hatch-iron"
+            patternUnits="userSpaceOnUse"
+            width="8"
+            height="8"
+            patternTransform="rotate(45)"
+          >
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="8"
+              stroke="#a04040"
+              strokeWidth="0.5"
+              opacity="0.25"
+            />
           </pattern>
-          <pattern id="hatch-emerald" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(30)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#206060" strokeWidth="0.5" opacity="0.25" />
+          <pattern
+            id="hatch-emerald"
+            patternUnits="userSpaceOnUse"
+            width="8"
+            height="8"
+            patternTransform="rotate(30)"
+          >
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="8"
+              stroke="#206060"
+              strokeWidth="0.5"
+              opacity="0.25"
+            />
           </pattern>
-          <pattern id="hatch-frost" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(60)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#2040a0" strokeWidth="0.5" opacity="0.25" />
+          <pattern
+            id="hatch-frost"
+            patternUnits="userSpaceOnUse"
+            width="8"
+            height="8"
+            patternTransform="rotate(60)"
+          >
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="8"
+              stroke="#2040a0"
+              strokeWidth="0.5"
+              opacity="0.25"
+            />
           </pattern>
-          <pattern id="hatch-gold" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(15)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#a06010" strokeWidth="0.5" opacity="0.25" />
+          <pattern
+            id="hatch-gold"
+            patternUnits="userSpaceOnUse"
+            width="8"
+            height="8"
+            patternTransform="rotate(15)"
+          >
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="8"
+              stroke="#a06010"
+              strokeWidth="0.5"
+              opacity="0.25"
+            />
           </pattern>
         </defs>
 
         {/* Outer decorative frame */}
-        <rect x="2" y="2" width="676" height="416" fill="none" stroke="rgba(212,175,122,0.35)" strokeWidth="1.5" rx="2" />
-        <rect x="6" y="6" width="668" height="408" fill="none" stroke="rgba(212,175,122,0.15)" strokeWidth="0.5" rx="1" />
+        <rect
+          x="2"
+          y="2"
+          width="676"
+          height="416"
+          fill="none"
+          stroke="rgba(212,175,122,0.35)"
+          strokeWidth="1.5"
+          rx="2"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="668"
+          height="408"
+          fill="none"
+          stroke="rgba(212,175,122,0.15)"
+          strokeWidth="0.5"
+          rx="1"
+        />
         <rect x="2" y="2" width="676" height="416" fill="url(#frame-dots)" />
 
         {/* Corner flourishes */}
@@ -272,7 +585,8 @@ export default function FantasyMap({ isChatOpen = false }) {
           style={{
             cursor: "pointer",
             opacity: hoveredTerritory === "rsa" ? 1 : 0.9,
-            filter: hoveredTerritory === "rsa" ? "brightness(1.2)" : "brightness(1)",
+            filter:
+              hoveredTerritory === "rsa" ? "brightness(1.2)" : "brightness(1)",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={() => handleMouseEnter("rsa")}
@@ -293,7 +607,10 @@ export default function FantasyMap({ isChatOpen = false }) {
           style={{
             cursor: "pointer",
             opacity: hoveredTerritory === "vigenere" ? 1 : 0.9,
-            filter: hoveredTerritory === "vigenere" ? "brightness(1.2)" : "brightness(1)",
+            filter:
+              hoveredTerritory === "vigenere"
+                ? "brightness(1.2)"
+                : "brightness(1)",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={() => handleMouseEnter("vigenere")}
@@ -314,7 +631,10 @@ export default function FantasyMap({ isChatOpen = false }) {
           style={{
             cursor: "pointer",
             opacity: hoveredTerritory === "playfair" ? 1 : 0.9,
-            filter: hoveredTerritory === "playfair" ? "brightness(1.2)" : "brightness(1)",
+            filter:
+              hoveredTerritory === "playfair"
+                ? "brightness(1.2)"
+                : "brightness(1)",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={() => handleMouseEnter("playfair")}
@@ -335,7 +655,8 @@ export default function FantasyMap({ isChatOpen = false }) {
           style={{
             cursor: "pointer",
             opacity: hoveredTerritory === "hill" ? 1 : 0.9,
-            filter: hoveredTerritory === "hill" ? "brightness(1.2)" : "brightness(1)",
+            filter:
+              hoveredTerritory === "hill" ? "brightness(1.2)" : "brightness(1)",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={() => handleMouseEnter("hill")}
@@ -352,7 +673,7 @@ export default function FantasyMap({ isChatOpen = false }) {
         {terrainIcons.map(({ id, Icon, color, positions }) =>
           positions.map((pos, i) => (
             <Icon key={`${id}-${i}`} cx={pos.x} cy={pos.y} color={color} />
-          ))
+          )),
         )}
 
         {/* Hand-inked border paths (roughened) */}
@@ -506,29 +827,98 @@ export default function FantasyMap({ isChatOpen = false }) {
         {/* Compass Rose - ornate 8-point star */}
         <g transform="translate(625, 380)" opacity="0.5">
           {/* Outer ring */}
-          <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(212,175,122,0.4)" strokeWidth="0.6" />
-          <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(212,175,122,0.15)" strokeWidth="0.3" />
+          <circle
+            cx="0"
+            cy="0"
+            r="22"
+            fill="none"
+            stroke="rgba(212,175,122,0.4)"
+            strokeWidth="0.6"
+          />
+          <circle
+            cx="0"
+            cy="0"
+            r="20"
+            fill="none"
+            stroke="rgba(212,175,122,0.15)"
+            strokeWidth="0.3"
+          />
 
           {/* Cardinal points */}
-          <polygon points="0,-18 3,-5 0,-2 -3,-5" fill="rgba(212,175,122,0.5)" />
+          <polygon
+            points="0,-18 3,-5 0,-2 -3,-5"
+            fill="rgba(212,175,122,0.5)"
+          />
           <polygon points="0,18 3,5 0,2 -3,5" fill="rgba(212,175,122,0.3)" />
-          <polygon points="-18,0 -5,3 -2,0 -5,-3" fill="rgba(212,175,122,0.3)" />
+          <polygon
+            points="-18,0 -5,3 -2,0 -5,-3"
+            fill="rgba(212,175,122,0.3)"
+          />
           <polygon points="18,0 5,3 2,0 5,-3" fill="rgba(212,175,122,0.3)" />
 
           {/* Intercardinal points */}
-          <polygon points="-12,-12 -3,-4 -1,-1 -4,-3" fill="rgba(212,175,122,0.2)" />
-          <polygon points="12,-12 3,-4 1,-1 4,-3" fill="rgba(212,175,122,0.2)" />
-          <polygon points="-12,12 -3,4 -1,1 -4,3" fill="rgba(212,175,122,0.2)" />
+          <polygon
+            points="-12,-12 -3,-4 -1,-1 -4,-3"
+            fill="rgba(212,175,122,0.2)"
+          />
+          <polygon
+            points="12,-12 3,-4 1,-1 4,-3"
+            fill="rgba(212,175,122,0.2)"
+          />
+          <polygon
+            points="-12,12 -3,4 -1,1 -4,3"
+            fill="rgba(212,175,122,0.2)"
+          />
           <polygon points="12,12 3,4 1,1 4,3" fill="rgba(212,175,122,0.2)" />
 
           {/* Center */}
           <circle cx="0" cy="0" r="2" fill="rgba(212,175,122,0.5)" />
 
           {/* Labels */}
-          <text x="0" y="-24" fontFamily="Georgia, serif" fontSize="6" fill="rgba(212,175,122,0.5)" textAnchor="middle" fontWeight="bold">N</text>
-          <text x="0" y="30" fontFamily="Georgia, serif" fontSize="6" fill="rgba(212,175,122,0.4)" textAnchor="middle" fontWeight="bold">S</text>
-          <text x="-28" y="2.5" fontFamily="Georgia, serif" fontSize="6" fill="rgba(212,175,122,0.4)" textAnchor="middle" fontWeight="bold">W</text>
-          <text x="28" y="2.5" fontFamily="Georgia, serif" fontSize="6" fill="rgba(212,175,122,0.4)" textAnchor="middle" fontWeight="bold">E</text>
+          <text
+            x="0"
+            y="-24"
+            fontFamily="Georgia, serif"
+            fontSize="6"
+            fill="rgba(212,175,122,0.5)"
+            textAnchor="middle"
+            fontWeight="bold"
+          >
+            N
+          </text>
+          <text
+            x="0"
+            y="30"
+            fontFamily="Georgia, serif"
+            fontSize="6"
+            fill="rgba(212,175,122,0.4)"
+            textAnchor="middle"
+            fontWeight="bold"
+          >
+            S
+          </text>
+          <text
+            x="-28"
+            y="2.5"
+            fontFamily="Georgia, serif"
+            fontSize="6"
+            fill="rgba(212,175,122,0.4)"
+            textAnchor="middle"
+            fontWeight="bold"
+          >
+            W
+          </text>
+          <text
+            x="28"
+            y="2.5"
+            fontFamily="Georgia, serif"
+            fontSize="6"
+            fill="rgba(212,175,122,0.4)"
+            textAnchor="middle"
+            fontWeight="bold"
+          >
+            E
+          </text>
         </g>
       </svg>
     </div>
