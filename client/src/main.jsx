@@ -1,8 +1,8 @@
-import ReactDOM from 'react-dom/client'
-import { StrictMode } from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
-import './styles/index.css'
+import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./styles/index.css";
 
 const CACHE_RESET_FLAG = "__crypto_realm_cache_reset__";
 
@@ -15,7 +15,9 @@ async function clearLegacyClientState() {
   if ("serviceWorker" in navigator) {
     const registrations = await navigator.serviceWorker.getRegistrations();
     if (registrations.length > 0) {
-      await Promise.all(registrations.map((registration) => registration.unregister()));
+      await Promise.all(
+        registrations.map((registration) => registration.unregister()),
+      );
       cleared = true;
     }
   }
@@ -37,7 +39,7 @@ async function clearLegacyClientState() {
   return false;
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 (async () => {
   if (!(await clearLegacyClientState())) {
@@ -47,6 +49,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'))
           <App />
         </BrowserRouter>
       </StrictMode>,
-    )
+    );
   }
-})()
+})();
