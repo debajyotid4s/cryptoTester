@@ -33,7 +33,8 @@ body {
   font-family: "Courier Prime", monospace;
   color: var(--text-primary);
   background: var(--bg-base);
-  overflow-x: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 ::selection {

@@ -5,9 +5,9 @@ import Navbar from "./Navbar";
 export default function Layout() {
   const location = useLocation();
   return (
-    <div className="h-screen bg-[#0a0d12] flex flex-col">
+    <div className="min-h-dvh bg-[#0a0d12] flex flex-col">
       <Navbar />
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 min-h-0 overflow-hidden">
         <AnimatePresence>
           <motion.div
             key={location.pathname}

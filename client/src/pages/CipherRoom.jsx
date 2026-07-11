@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Copy, Shuffle, AlertCircle, RefreshCw } from "lucide-react";
-import { CIPHER_ALGORITHMS, encrypt, decrypt, generateKeys } from "../services/cryptoService";
+import {
+  CIPHER_ALGORITHMS,
+  encrypt,
+  decrypt,
+  generateKeys,
+} from "../services/cryptoService";
 import Toast from "../components/ui/Toast";
 import KeyFactorCard from "../components/cipher/KeyFactorCard";
 import AlgorithmFact from "../components/cipher/AlgorithmFact";
@@ -108,9 +113,16 @@ export default function CipherRoom() {
     setError(null);
     try {
       const startTime = performance.now();
-      const encryptParams = algo === "rsa" && rsaKeys
-        ? { e: rsaKeys.e, n: rsaKeys.n, p: rsaKeys.p, q: rsaKeys.q, phi: rsaKeys.phi }
-        : params;
+      const encryptParams =
+        algo === "rsa" && rsaKeys
+          ? {
+              e: rsaKeys.e,
+              n: rsaKeys.n,
+              p: rsaKeys.p,
+              q: rsaKeys.q,
+              phi: rsaKeys.phi,
+            }
+          : params;
       const data = await encrypt(algo, inputText.toUpperCase(), encryptParams);
       const endTime = performance.now();
       setOutputText(data.result);
@@ -136,13 +148,28 @@ export default function CipherRoom() {
     setError(null);
     try {
       const startTime = performance.now();
-      const decryptParams = algo === "rsa" && rsaKeys
-        ? { d: rsaKeys.d, n: rsaKeys.n, p: rsaKeys.p, q: rsaKeys.q, phi: rsaKeys.phi }
-        : { ...params };
-      if (algo !== "rsa" && params.stripPadding && lastResult?.explain?.padAdded) {
+      const decryptParams =
+        algo === "rsa" && rsaKeys
+          ? {
+              d: rsaKeys.d,
+              n: rsaKeys.n,
+              p: rsaKeys.p,
+              q: rsaKeys.q,
+              phi: rsaKeys.phi,
+            }
+          : { ...params };
+      if (
+        algo !== "rsa" &&
+        params.stripPadding &&
+        lastResult?.explain?.padAdded
+      ) {
         decryptParams.padAdded = lastResult.explain.padAdded;
       }
-      if (algo !== "rsa" && params.stripPadding && lastResult?.explain?.padAddedPerWord) {
+      if (
+        algo !== "rsa" &&
+        params.stripPadding &&
+        lastResult?.explain?.padAddedPerWord
+      ) {
         decryptParams.padAddedPerWord = lastResult.explain.padAddedPerWord;
       }
       const data = await decrypt(algo, inputText.toUpperCase(), decryptParams);
@@ -171,7 +198,6 @@ export default function CipherRoom() {
       await navigator.clipboard.writeText(outputText);
       showToast("Copied to clipboard", "success");
     } catch {}
-
   };
 
   const handleSwap = () => {
@@ -199,17 +225,17 @@ export default function CipherRoom() {
 
   return (
     <div
-      className="h-full relative overflow-y-auto"
+      className="min-h-full relative overflow-y-auto"
       style={{
         background: `radial-gradient(circle at 50% 30%, ${theme.color}08 0%, transparent 50%)`,
       }}
     >
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-realm-muted hover:text-realm-text mb-8 transition-colors font-mono"
+          className="flex items-center gap-2 text-realm-muted hover:text-realm-text mb-6 md:mb-8 transition-colors font-mono"
         >
           <MapPin size={18} className={theme.textClass} />
           <span className="text-sm">Return to Realm Map</span>
@@ -218,10 +244,10 @@ export default function CipherRoom() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
           <h1
-            className={`font-cinzel text-5xl md:text-6xl font-bold mb-3 tracking-wide`}
+            className={`font-cinzel text-3xl sm:text-4xl md:text-6xl font-bold mb-3 tracking-wide leading-tight`}
             style={{
               background: `linear-gradient(135deg, ${theme.color}ff 0%, ${theme.light}cc 50%, ${theme.color}99 100%)`,
               WebkitBackgroundClip: "text",
@@ -234,7 +260,7 @@ export default function CipherRoom() {
             {cipherData.name}
           </h1>
           <p
-            className="text-sm md:text-base font-cinzel tracking-[0.25em] uppercase font-semibold"
+            className="text-[10px] sm:text-sm md:text-base font-cinzel tracking-[0.2em] sm:tracking-[0.25em] uppercase font-semibold"
             style={{
               color: theme.color,
               opacity: 0.8,
@@ -244,24 +270,24 @@ export default function CipherRoom() {
             {cipherData.realm}
           </p>
 
-          <div className="flex justify-center my-8">
-            <div className="relative w-80">
+          <div className="flex justify-center my-6 md:my-8">
+            <div className="relative w-52 sm:w-64 md:w-80">
               <div
                 className="h-px"
                 style={{
                   background: `linear-gradient(to right, transparent, ${theme.color}40 20%, ${theme.color}40 80%, transparent)`,
                 }}
               />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-realm-bg px-6">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-realm-bg px-4 sm:px-6">
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center"
                   style={{
                     background: `radial-gradient(circle, ${theme.color}20 0%, transparent 70%)`,
                   }}
                 >
                   <svg
-                    width="20"
-                    height="20"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                     fill={theme.color}
                     opacity="0.7"
@@ -273,7 +299,7 @@ export default function CipherRoom() {
               </div>
             </div>
           </div>
-          </motion.div>
+        </motion.div>
 
         <AlgorithmFact
           algo={algo}
@@ -282,12 +308,12 @@ export default function CipherRoom() {
           theme={theme}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className={`parchment-bg rounded-2xl p-8 border border-realm-border ${theme.borderClass}`}
+            className={`parchment-bg rounded-2xl p-5 md:p-8 border border-realm-border ${theme.borderClass}`}
           >
             <label className="block text-sm text-realm-muted mb-3 font-cinzel uppercase tracking-wider">
               Cipher Text
@@ -296,7 +322,7 @@ export default function CipherRoom() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value.toUpperCase())}
               placeholder="Enter text (A-Z and spaces)"
-              className="w-full h-56 bg-realm-bg border-2 rounded-xl p-5 text-lg text-realm-text font-cinzel resize-none transition-all duration-300 focus:outline-none hover:shadow-lg"
+              className="w-full h-40 sm:h-48 md:h-56 bg-realm-bg border-2 rounded-xl p-4 md:p-5 text-base md:text-lg text-realm-text font-cinzel resize-none transition-all duration-300 focus:outline-none hover:shadow-lg"
               style={{
                 borderColor: theme.color,
                 boxShadow: `inset 0 0 20px ${theme.color}10, 0 0 15px ${theme.color}20`,
@@ -308,7 +334,7 @@ export default function CipherRoom() {
                 <button
                   key={text}
                   onClick={() => setInputText(text)}
-                  className="px-4 py-2 text-sm rounded-lg font-cinzel font-semibold transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 border"
+                  className="px-3 py-2 text-xs sm:text-sm rounded-lg font-cinzel font-semibold transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 border"
                   style={{
                     borderColor: theme.color,
                     color: theme.color,
@@ -329,11 +355,11 @@ export default function CipherRoom() {
               onGenerateKeys={handleGenerateKeys}
             />
 
-            <div className="flex gap-3 mt-8">
+            <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-8">
               <button
                 onClick={handleEncrypt}
                 disabled={loading}
-                className="flex-1 py-4 rounded-xl font-cinzel font-bold text-base tracking-wide uppercase transition-all duration-300 hover:shadow-lg hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 md:py-4 rounded-xl font-cinzel font-bold text-sm sm:text-base tracking-wide uppercase transition-all duration-300 hover:shadow-lg hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: theme.color,
                   color: "#0d1117",
@@ -345,7 +371,7 @@ export default function CipherRoom() {
               <button
                 onClick={handleDecrypt}
                 disabled={loading}
-                className="flex-1 py-4 rounded-xl font-cinzel font-bold text-base tracking-wide uppercase border-2 transition-all duration-300 hover:shadow-lg hover:bg-white/5 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 md:py-4 rounded-xl font-cinzel font-bold text-sm sm:text-base tracking-wide uppercase border-2 transition-all duration-300 hover:shadow-lg hover:bg-white/5 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   borderColor: theme.color,
                   color: theme.color,
@@ -361,7 +387,7 @@ export default function CipherRoom() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className={`parchment-bg rounded-2xl p-8 border border-realm-border ${theme.borderClass}`}
+            className={`parchment-bg rounded-2xl p-5 md:p-8 border border-realm-border ${theme.borderClass}`}
           >
             {error && (
               <div className="flex items-center gap-2 bg-red-900/20 border border-red-800/30 rounded-lg p-3 mb-4">
@@ -389,7 +415,7 @@ export default function CipherRoom() {
               value={outputText}
               readOnly
               placeholder="Result will appear here"
-              className="w-full h-56 border-2 rounded-xl p-5 text-lg text-realm-text font-cinzel resize-none transition-all duration-300"
+              className="w-full h-40 sm:h-48 md:h-56 border-2 rounded-xl p-4 md:p-5 text-base md:text-lg text-realm-text font-cinzel resize-none transition-all duration-300"
               style={{
                 backgroundColor: "rgba(19, 26, 38, 0.95)",
                 borderColor: theme.color,
@@ -436,7 +462,14 @@ export default function CipherRoom() {
   );
 }
 
-function ParameterFields({ algo, params, onChange, theme, rsaKeys, onGenerateKeys }) {
+function ParameterFields({
+  algo,
+  params,
+  onChange,
+  theme,
+  rsaKeys,
+  onGenerateKeys,
+}) {
   switch (algo) {
     case "rsa":
       return (
@@ -457,16 +490,26 @@ function ParameterFields({ algo, params, onChange, theme, rsaKeys, onGenerateKey
           </div>
 
           {rsaKeys && (
-            <div className="bg-realm-bg/80 border rounded-lg p-4 space-y-2 font-mono text-xs" style={{ borderColor: `${theme.color}30` }}>
+            <div
+              className="bg-realm-bg/80 border rounded-lg p-4 space-y-2 font-mono text-xs"
+              style={{ borderColor: `${theme.color}30` }}
+            >
               <div className="flex justify-between">
                 <span className="text-realm-muted">Public Key (e, n):</span>
-                <span className="text-realm-text">({rsaKeys.e}, {rsaKeys.n})</span>
+                <span className="text-realm-text">
+                  ({rsaKeys.e}, {rsaKeys.n})
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-realm-muted">Private Key (d, n):</span>
-                <span className="text-realm-text">({rsaKeys.d}, {rsaKeys.n})</span>
+                <span className="text-realm-text">
+                  ({rsaKeys.d}, {rsaKeys.n})
+                </span>
               </div>
-              <div className="border-t" style={{ borderColor: `${theme.color}20` }} />
+              <div
+                className="border-t"
+                style={{ borderColor: `${theme.color}20` }}
+              />
               <div className="flex justify-between">
                 <span className="text-realm-muted">p =</span>
                 <span className="text-realm-text">{rsaKeys.p}</span>
@@ -485,7 +528,9 @@ function ParameterFields({ algo, params, onChange, theme, rsaKeys, onGenerateKey
               </div>
               <div className="flex justify-between">
                 <span className="text-realm-muted">e × d mod φ(n) =</span>
-                <span className="text-realm-text">{(rsaKeys.e * rsaKeys.d) % rsaKeys.phi} ≡ 1</span>
+                <span className="text-realm-text">
+                  {(rsaKeys.e * rsaKeys.d) % rsaKeys.phi} ≡ 1
+                </span>
               </div>
             </div>
           )}

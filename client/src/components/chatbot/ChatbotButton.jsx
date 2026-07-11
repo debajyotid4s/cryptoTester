@@ -17,10 +17,10 @@ export default function ChatbotButton({ isOpen, onOpen }) {
       whileHover={{ scale: 1.15 }}
       whileTap={{ scale: 0.9 }}
       onClick={onOpen}
-      className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-600 to-amber-500 text-white shadow-2xl flex items-center justify-center hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-shadow duration-300"
+      className="fixed bottom-4 right-4 md:bottom-10 md:right-10 z-50 w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-yellow-600 to-amber-500 text-white shadow-2xl flex items-center justify-center hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-shadow duration-300"
       title="Ask Ra anything"
     >
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 hidden sm:flex items-center justify-center">
         {rays.map(({ angle, delay }) => (
           <motion.div
             key={angle}
@@ -46,7 +46,7 @@ export default function ChatbotButton({ isOpen, onOpen }) {
       </div>
 
       <svg
-        className="w-10 h-10 relative z-10"
+        className="w-8 h-8 md:w-10 md:h-10 relative z-10"
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -55,9 +55,30 @@ export default function ChatbotButton({ isOpen, onOpen }) {
         <circle cx="50" cy="55" r="18" fill="white" />
         <circle cx="50" cy="55" r="12" fill="#1a2035" />
         <circle cx="52" cy="52" r="4" fill="white" opacity="0.9" />
-        <line x1="30" y1="75" x2="25" y2="85" stroke="white" strokeWidth="2.5" />
-        <line x1="50" y1="75" x2="50" y2="87" stroke="white" strokeWidth="2.5" />
-        <line x1="70" y1="75" x2="75" y2="85" stroke="white" strokeWidth="2.5" />
+        <line
+          x1="30"
+          y1="75"
+          x2="25"
+          y2="85"
+          stroke="white"
+          strokeWidth="2.5"
+        />
+        <line
+          x1="50"
+          y1="75"
+          x2="50"
+          y2="87"
+          stroke="white"
+          strokeWidth="2.5"
+        />
+        <line
+          x1="70"
+          y1="75"
+          x2="75"
+          y2="85"
+          stroke="white"
+          strokeWidth="2.5"
+        />
       </svg>
     </motion.button>
   );
