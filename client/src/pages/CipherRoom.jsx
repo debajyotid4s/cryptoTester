@@ -225,12 +225,12 @@ export default function CipherRoom() {
 
   return (
     <div
-      className="min-h-full relative overflow-y-auto"
+      className="w-full relative"
       style={{
         background: `radial-gradient(circle at 50% 30%, ${theme.color}08 0%, transparent 50%)`,
       }}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-10 md:pb-12">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
