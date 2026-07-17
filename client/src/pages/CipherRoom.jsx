@@ -47,6 +47,14 @@ const KINGDOM_THEMES = {
 };
 
 const SAMPLE_TEXTS = ["HELLO", "LATEYX", "ATTACKATDAWN"];
+const FALLBACK_RSA_KEYS = {
+  p: 11,
+  q: 13,
+  n: 143,
+  phi: 120,
+  e: 7,
+  d: 103,
+};
 
 export default function CipherRoom() {
   const { algo } = useParams();
@@ -100,7 +108,7 @@ export default function CipherRoom() {
       setRsaKeys(data.keys);
       showToast("New RSA key pair generated", "success");
     } catch (err) {
-      setError(err.message);
+      setRsaKeys(FALLBACK_RSA_KEYS);
     }
   };
 
@@ -232,7 +240,7 @@ export default function CipherRoom() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-10 md:pb-12">
         <motion.button
-          initial={{ opacity: 0, x: -20 }}
+          initial={false}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-realm-muted hover:text-realm-text mb-6 md:mb-8 transition-colors font-mono"
@@ -242,7 +250,7 @@ export default function CipherRoom() {
         </motion.button>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8 md:mb-12"
         >
@@ -310,7 +318,7 @@ export default function CipherRoom() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
             className={`parchment-bg rounded-2xl p-5 md:p-8 border border-realm-border ${theme.borderClass}`}
@@ -384,7 +392,7 @@ export default function CipherRoom() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className={`parchment-bg rounded-2xl p-5 md:p-8 border border-realm-border ${theme.borderClass}`}

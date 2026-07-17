@@ -1,19 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader, BookOpen } from "lucide-react";
-import { fetchAlgorithmFact } from "../../services/factService";
+import { BookOpen } from "lucide-react";
+import {
+  fetchAlgorithmFact,
+  getLocalAlgorithmFact,
+} from "../../services/factService";
 
 export default function AlgorithmFact({ algo, kingdom, cipher, theme, onDismiss }) {
-  const [fact, setFact] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [fact, setFact] = useState(() => getLocalAlgorithmFact(kingdom, cipher));
   const [error, setError] = useState(null);
   const [dismissed, setDismissed] = useState(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
     mountedRef.current = true;
-    setFact("");
-    setLoading(true);
+    setFact(getLocalAlgorithmFact(kingdom, cipher));
     setError(null);
     setDismissed(false);
 
@@ -21,13 +22,11 @@ export default function AlgorithmFact({ algo, kingdom, cipher, theme, onDismiss 
       .then((text) => {
         if (mountedRef.current) {
           setFact(text);
-          setLoading(false);
         }
       })
       .catch((err) => {
         if (mountedRef.current) {
           setError(err.message);
-          setLoading(false);
         }
       });
 
@@ -101,22 +100,9 @@ export default function AlgorithmFact({ algo, kingdom, cipher, theme, onDismiss 
             </div>
 
             <div className="relative">
-              {loading && (
-                <div className="flex items-center gap-3 py-4">
-                  <Loader size={18} className="animate-spin" style={{ color: theme.color }} />
-                  <span className="text-sm text-realm-muted font-mono">
-                    Consulting the archives...
-                  </span>
-                </div>
-              )}
+              {error && null}
 
-              {error && (
-                <div className="bg-red-900/20 border border-red-800/30 rounded-lg p-4">
-                  <p className="text-red-300 text-sm font-mono">{error}</p>
-                </div>
-              )}
-
-              {fact && !loading && (
+              {fact && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

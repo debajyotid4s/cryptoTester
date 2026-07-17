@@ -48,10 +48,36 @@ function authHeaders() {
   return AUTH_KEY ? { Authorization: `Bearer ${AUTH_KEY}` } : {};
 }
 
+async function parseResponseBody(response) {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return await response.json();
+  }
+
+  const text = await response.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { error: text };
+  }
+}
+
 export async function apiPost(path, body) {
   const response = await postWithFallback(path, body);
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Request failed");
+
+  const data = await parseResponseBody(response);
+  if (!response.ok) {
+    const message = data?.error || data?.message || "Request failed";
+    throw new Error(message);
+  }
+
+  if (!data || typeof data !== "object") {
+    throw new Error("Invalid server response");
+  }
+
   return data;
 }
 

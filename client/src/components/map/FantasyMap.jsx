@@ -385,10 +385,9 @@ export default function FantasyMap({ isChatOpen = false }) {
   return (
     <div
       ref={containerRef}
-      className="w-full max-w-[1200px] mx-auto flex items-center justify-center relative overflow-hidden"
+      className="w-full h-full relative overflow-hidden"
       style={{
         pointerEvents: isChatOpen ? "none" : "auto",
-        height: "min(72dvh, 42rem)",
       }}
       onMouseLeave={handleMouseLeave}
     >
@@ -428,13 +427,11 @@ export default function FantasyMap({ isChatOpen = false }) {
         width="100%"
         height="100%"
         viewBox="0 0 680 420"
+        preserveAspectRatio="xMidYMid slice"
         role="img"
         xmlns="http://www.w3.org/2000/svg"
+        className="absolute inset-0"
         style={{
-          maxWidth: "100%",
-          maxHeight: "100%",
-          objectFit: "contain",
-          position: "relative",
           zIndex: 1,
         }}
       >

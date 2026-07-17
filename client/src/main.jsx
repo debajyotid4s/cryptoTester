@@ -8,7 +8,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <StrictMode>
-    <BrowserRouter basename="/cryptoTester">
+    <BrowserRouter
+      basename="/cryptoTester"
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <App />
     </BrowserRouter>
   </StrictMode>,

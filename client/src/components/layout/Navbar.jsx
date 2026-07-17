@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full px-4 md:px-8 py-3 md:py-4 flex items-center justify-between bg-black/60 backdrop-blur-md border-b border-white/10">
-      <div className="flex items-center gap-3 group">
+      <Link to="/" className="flex items-center gap-3 group">
         <div className="w-9 h-9 md:w-10 md:h-10 rounded-md flex items-center justify-center ring-2 ring-red-500/60">
           <Shield className="w-5 h-5 text-red-500" />
         </div>
@@ -18,7 +18,7 @@ export default function Navbar() {
             Cryptographic Realm
           </h1>
         </div>
-      </div>
+      </Link>
 
       <div className="hidden md:flex items-center gap-8">
         <Link
