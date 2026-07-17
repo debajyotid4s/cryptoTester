@@ -139,8 +139,12 @@ router.post("/", async (req, res) => {
     }
 
     for (const msg of messages) {
-      if (!msg.role || typeof msg.content !== "string" || msg.content.length > 500) {
+      if (!msg.role || typeof msg.content !== "string") {
         return res.status(400).json({ error: "Invalid message format" });
+      }
+      const maxLen = msg.role === "user" ? 500 : 2000;
+      if (msg.content.length > maxLen) {
+        return res.status(400).json({ error: `Message too long (max ${maxLen} chars for ${msg.role})` });
       }
     }
 
